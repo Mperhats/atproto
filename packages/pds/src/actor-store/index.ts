@@ -107,6 +107,30 @@ export class ActorStore {
     }
   }
 
+  async writeNoTransaction<T>(did: string, fn: ActorStoreWriterFn<T>) {
+    const keypair = await this.keypair(did)
+    const db = await this.openDb(did)
+    try {
+      const writer = createActorTransactor(did, db, keypair, this.resources)
+      return await fn({
+        ...writer,
+        transact: async <T>(fn: ActorStoreTransactFn<T>): Promise<T> => {
+          return db.transaction((dbTxn) => {
+            const transactor = createActorTransactor(
+              did,
+              dbTxn,
+              keypair,
+              this.resources,
+            )
+            return fn(transactor)
+          })
+        },
+      })
+    } finally {
+      db.close()
+    }
+  }
+
   async create(did: string, keypair: ExportableKeypair) {
     const { directory, dbLocation, keyLocation } = await this.getLocation(did)
     // ensure subdir exists
@@ -232,6 +256,7 @@ const createActorReader = (
     repo: new RepoReader(db, blobstore(did)),
     record: new RecordReader(db),
     pref: new PreferenceReader(db),
+    keypair: getKeypair,
     transact: async <T>(fn: ActorStoreTransactFn<T>): Promise<T> => {
       const keypair = await getKeypair()
       return db.transaction((dbTxn) => {
@@ -244,6 +269,7 @@ const createActorReader = (
 
 export type ActorStoreReadFn<T> = (fn: ActorStoreReader) => Promise<T>
 export type ActorStoreTransactFn<T> = (fn: ActorStoreTransactor) => Promise<T>
+export type ActorStoreWriterFn<T> = (fn: ActorStoreWriter) => Promise<T>
 
 export type ActorStoreReader = {
   did: string
@@ -251,6 +277,7 @@ export type ActorStoreReader = {
   repo: RepoReader
   record: RecordReader
   pref: PreferenceReader
+  keypair: () => Promise<Keypair>
   transact: <T>(fn: ActorStoreTransactFn<T>) => Promise<T>
 }
 
@@ -260,6 +287,10 @@ export type ActorStoreTransactor = {
   repo: RepoTransactor
   record: RecordTransactor
   pref: PreferenceTransactor
+}
+
+export type ActorStoreWriter = ActorStoreTransactor & {
+  transact: <T>(fn: ActorStoreTransactFn<T>) => Promise<T>
 }
 
 function assertSafePathPart(part: string) {
