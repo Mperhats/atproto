@@ -12,7 +12,7 @@ const run = async () => {
 ╚█║████╔╝
  ╚╝╚═══╝  protocol
 
-[ created by Bluesky ]`)
+[ created by nosh ]`)
 
   const network = await TestNetwork.create({
     pds: {

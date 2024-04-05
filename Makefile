@@ -49,6 +49,7 @@ deps: ## Installs dependent libs using 'pnpm install'
 
 .PHONY: nvm-setup
 nvm-setup: ## Use NVM to install and activate node+pnpm
-	nvm install 18
-	nvm use 18
+	. ${HOME}/.nvm/nvm.sh; \
+	nvm install 18 && \
+	nvm use 18 && \
 	npm install --global pnpm
