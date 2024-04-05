@@ -50,6 +50,7 @@ import * as ComAtprotoServerCreateAccount from './types/com/atproto/server/creat
 import * as ComAtprotoServerCreateAppPassword from './types/com/atproto/server/createAppPassword'
 import * as ComAtprotoServerCreateInviteCode from './types/com/atproto/server/createInviteCode'
 import * as ComAtprotoServerCreateInviteCodes from './types/com/atproto/server/createInviteCodes'
+import * as ComAtprotoServerCreateMerchant from './types/com/atproto/server/createMerchant'
 import * as ComAtprotoServerCreateSession from './types/com/atproto/server/createSession'
 import * as ComAtprotoServerDeactivateAccount from './types/com/atproto/server/deactivateAccount'
 import * as ComAtprotoServerDefs from './types/com/atproto/server/defs'
@@ -142,6 +143,8 @@ import * as AppBskyGraphUnmuteActorList from './types/app/bsky/graph/unmuteActor
 import * as AppBskyLabelerDefs from './types/app/bsky/labeler/defs'
 import * as AppBskyLabelerGetServices from './types/app/bsky/labeler/getServices'
 import * as AppBskyLabelerService from './types/app/bsky/labeler/service'
+import * as AppBskyMerchantDefs from './types/app/bsky/merchant/defs'
+import * as AppBskyMerchantGetMerchant from './types/app/bsky/merchant/getMerchant'
 import * as AppBskyNotificationGetUnreadCount from './types/app/bsky/notification/getUnreadCount'
 import * as AppBskyNotificationListNotifications from './types/app/bsky/notification/listNotifications'
 import * as AppBskyNotificationRegisterPush from './types/app/bsky/notification/registerPush'
@@ -209,6 +212,7 @@ export * as ComAtprotoServerCreateAccount from './types/com/atproto/server/creat
 export * as ComAtprotoServerCreateAppPassword from './types/com/atproto/server/createAppPassword'
 export * as ComAtprotoServerCreateInviteCode from './types/com/atproto/server/createInviteCode'
 export * as ComAtprotoServerCreateInviteCodes from './types/com/atproto/server/createInviteCodes'
+export * as ComAtprotoServerCreateMerchant from './types/com/atproto/server/createMerchant'
 export * as ComAtprotoServerCreateSession from './types/com/atproto/server/createSession'
 export * as ComAtprotoServerDeactivateAccount from './types/com/atproto/server/deactivateAccount'
 export * as ComAtprotoServerDefs from './types/com/atproto/server/defs'
@@ -301,6 +305,8 @@ export * as AppBskyGraphUnmuteActorList from './types/app/bsky/graph/unmuteActor
 export * as AppBskyLabelerDefs from './types/app/bsky/labeler/defs'
 export * as AppBskyLabelerGetServices from './types/app/bsky/labeler/getServices'
 export * as AppBskyLabelerService from './types/app/bsky/labeler/service'
+export * as AppBskyMerchantDefs from './types/app/bsky/merchant/defs'
+export * as AppBskyMerchantGetMerchant from './types/app/bsky/merchant/getMerchant'
 export * as AppBskyNotificationGetUnreadCount from './types/app/bsky/notification/getUnreadCount'
 export * as AppBskyNotificationListNotifications from './types/app/bsky/notification/listNotifications'
 export * as AppBskyNotificationRegisterPush from './types/app/bsky/notification/registerPush'
@@ -886,6 +892,17 @@ export class ComAtprotoServerNS {
       })
   }
 
+  createMerchant(
+    data?: ComAtprotoServerCreateMerchant.InputSchema,
+    opts?: ComAtprotoServerCreateMerchant.CallOptions,
+  ): Promise<ComAtprotoServerCreateMerchant.Response> {
+    return this._service.xrpc
+      .call('com.atproto.server.createMerchant', opts?.qp, data, opts)
+      .catch((e) => {
+        throw ComAtprotoServerCreateMerchant.toKnownErr(e)
+      })
+  }
+
   createSession(
     data?: ComAtprotoServerCreateSession.InputSchema,
     opts?: ComAtprotoServerCreateSession.CallOptions,
@@ -1272,6 +1289,7 @@ export class AppBskyNS {
   feed: AppBskyFeedNS
   graph: AppBskyGraphNS
   labeler: AppBskyLabelerNS
+  merchant: AppBskyMerchantNS
   notification: AppBskyNotificationNS
   richtext: AppBskyRichtextNS
   unspecced: AppBskyUnspeccedNS
@@ -1283,6 +1301,7 @@ export class AppBskyNS {
     this.feed = new AppBskyFeedNS(service)
     this.graph = new AppBskyGraphNS(service)
     this.labeler = new AppBskyLabelerNS(service)
+    this.merchant = new AppBskyMerchantNS(service)
     this.notification = new AppBskyNotificationNS(service)
     this.richtext = new AppBskyRichtextNS(service)
     this.unspecced = new AppBskyUnspeccedNS(service)
@@ -2522,6 +2541,25 @@ export class ServiceRecord {
       { collection: 'app.bsky.labeler.service', ...params },
       { headers },
     )
+  }
+}
+
+export class AppBskyMerchantNS {
+  _service: AtpServiceClient
+
+  constructor(service: AtpServiceClient) {
+    this._service = service
+  }
+
+  getMerchant(
+    params?: AppBskyMerchantGetMerchant.QueryParams,
+    opts?: AppBskyMerchantGetMerchant.CallOptions,
+  ): Promise<AppBskyMerchantGetMerchant.Response> {
+    return this._service.xrpc
+      .call('app.bsky.merchant.getMerchant', params, undefined, opts)
+      .catch((e) => {
+        throw AppBskyMerchantGetMerchant.toKnownErr(e)
+      })
   }
 }
 

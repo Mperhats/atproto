@@ -48,6 +48,7 @@ import * as ComAtprotoServerCreateAccount from './types/com/atproto/server/creat
 import * as ComAtprotoServerCreateAppPassword from './types/com/atproto/server/createAppPassword'
 import * as ComAtprotoServerCreateInviteCode from './types/com/atproto/server/createInviteCode'
 import * as ComAtprotoServerCreateInviteCodes from './types/com/atproto/server/createInviteCodes'
+import * as ComAtprotoServerCreateMerchant from './types/com/atproto/server/createMerchant'
 import * as ComAtprotoServerCreateSession from './types/com/atproto/server/createSession'
 import * as ComAtprotoServerDeactivateAccount from './types/com/atproto/server/deactivateAccount'
 import * as ComAtprotoServerDeleteAccount from './types/com/atproto/server/deleteAccount'
@@ -119,6 +120,7 @@ import * as AppBskyGraphMuteActorList from './types/app/bsky/graph/muteActorList
 import * as AppBskyGraphUnmuteActor from './types/app/bsky/graph/unmuteActor'
 import * as AppBskyGraphUnmuteActorList from './types/app/bsky/graph/unmuteActorList'
 import * as AppBskyLabelerGetServices from './types/app/bsky/labeler/getServices'
+import * as AppBskyMerchantGetMerchant from './types/app/bsky/merchant/getMerchant'
 import * as AppBskyNotificationGetUnreadCount from './types/app/bsky/notification/getUnreadCount'
 import * as AppBskyNotificationListNotifications from './types/app/bsky/notification/listNotifications'
 import * as AppBskyNotificationRegisterPush from './types/app/bsky/notification/registerPush'
@@ -691,6 +693,17 @@ export class ComAtprotoServerNS {
     return this._server.xrpc.method(nsid, cfg)
   }
 
+  createMerchant<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerCreateMerchant.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerCreateMerchant.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.createMerchant' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
   createSession<AV extends AuthVerifier>(
     cfg: ConfigOf<
       AV,
@@ -1088,6 +1101,7 @@ export class AppBskyNS {
   feed: AppBskyFeedNS
   graph: AppBskyGraphNS
   labeler: AppBskyLabelerNS
+  merchant: AppBskyMerchantNS
   notification: AppBskyNotificationNS
   richtext: AppBskyRichtextNS
   unspecced: AppBskyUnspeccedNS
@@ -1099,6 +1113,7 @@ export class AppBskyNS {
     this.feed = new AppBskyFeedNS(server)
     this.graph = new AppBskyGraphNS(server)
     this.labeler = new AppBskyLabelerNS(server)
+    this.merchant = new AppBskyMerchantNS(server)
     this.notification = new AppBskyNotificationNS(server)
     this.richtext = new AppBskyRichtextNS(server)
     this.unspecced = new AppBskyUnspeccedNS(server)
@@ -1559,6 +1574,25 @@ export class AppBskyLabelerNS {
     >,
   ) {
     const nsid = 'app.bsky.labeler.getServices' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class AppBskyMerchantNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+
+  getMerchant<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyMerchantGetMerchant.Handler<ExtractAuth<AV>>,
+      AppBskyMerchantGetMerchant.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.merchant.getMerchant' // @ts-ignore
     return this._server.xrpc.method(nsid, cfg)
   }
 }

@@ -2188,6 +2188,116 @@ export const schemaDict = {
       },
     },
   },
+  ComAtprotoServerCreateMerchant: {
+    lexicon: 1,
+    id: 'com.atproto.server.createMerchant',
+    defs: {
+      main: {
+        type: 'procedure',
+        description: 'Create an merchant. Implemented by PDS.',
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['handle'],
+            properties: {
+              email: {
+                type: 'string',
+              },
+              handle: {
+                type: 'string',
+                format: 'handle',
+                description: 'Requested handle for the merchant.',
+              },
+              did: {
+                type: 'string',
+                format: 'did',
+                description:
+                  'Pre-existing atproto DID, being imported to a new merchant.',
+              },
+              inviteCode: {
+                type: 'string',
+              },
+              verificationCode: {
+                type: 'string',
+              },
+              verificationPhone: {
+                type: 'string',
+              },
+              password: {
+                type: 'string',
+                description:
+                  'Initial merchant password. May need to meet instance-specific password strength requirements.',
+              },
+              recoveryKey: {
+                type: 'string',
+                description:
+                  'DID PLC rotation key (aka, recovery key) to be included in PLC creation operation.',
+              },
+              plcOp: {
+                type: 'unknown',
+                description:
+                  'A signed DID PLC operation to be submitted as part of importing an existing merchant to this instance. NOTE: this optional field may be updated when full merchant migration is implemented.',
+              },
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            description:
+              'Merchant login session returned on successful merchant creation.',
+            required: ['accessJwt', 'refreshJwt', 'handle', 'did'],
+            properties: {
+              accessJwt: {
+                type: 'string',
+              },
+              refreshJwt: {
+                type: 'string',
+              },
+              handle: {
+                type: 'string',
+                format: 'handle',
+              },
+              did: {
+                type: 'string',
+                format: 'did',
+                description: 'The DID of the new merchant.',
+              },
+              didDoc: {
+                type: 'unknown',
+                description: 'Complete DID document.',
+              },
+            },
+          },
+        },
+        errors: [
+          {
+            name: 'InvalidHandle',
+          },
+          {
+            name: 'InvalidPassword',
+          },
+          {
+            name: 'InvalidInviteCode',
+          },
+          {
+            name: 'HandleNotAvailable',
+          },
+          {
+            name: 'UnsupportedDomain',
+          },
+          {
+            name: 'UnresolvableDid',
+          },
+          {
+            name: 'IncompatibleDidDoc',
+          },
+        ],
+      },
+    },
+  },
   ComAtprotoServerCreateSession: {
     lexicon: 1,
     id: 'com.atproto.server.createSession',
@@ -7287,6 +7397,85 @@ export const schemaDict = {
       },
     },
   },
+  AppBskyMerchantDefs: {
+    lexicon: 1,
+    id: 'app.bsky.merchant.defs',
+    defs: {
+      merchantView: {
+        type: 'object',
+        required: ['did', 'handle'],
+        properties: {
+          did: {
+            type: 'string',
+            format: 'did',
+          },
+          handle: {
+            type: 'string',
+            format: 'handle',
+          },
+          displayName: {
+            type: 'string',
+            maxGraphemes: 64,
+            maxLength: 640,
+          },
+          description: {
+            type: 'string',
+            maxGraphemes: 256,
+            maxLength: 2560,
+          },
+          avatar: {
+            type: 'string',
+            format: 'uri',
+          },
+          indexedAt: {
+            type: 'string',
+            format: 'datetime',
+          },
+          viewer: {
+            type: 'ref',
+            ref: 'lex:app.bsky.merchant.defs#viewerState',
+          },
+          labels: {
+            type: 'array',
+            items: {
+              type: 'ref',
+              ref: 'lex:com.atproto.label.defs#label',
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyMerchantGetMerchant: {
+    lexicon: 1,
+    id: 'app.bsky.merchant.getMerchant',
+    defs: {
+      main: {
+        type: 'query',
+        description:
+          'Get detailed profile view of an merchant. Does not require auth, but contains relevant metadata with auth.',
+        parameters: {
+          type: 'params',
+          required: ['merchant'],
+          properties: {
+            merchant: {
+              type: 'string',
+              format: 'at-identifier',
+              description:
+                'Handle or DID of merchant account to fetch profile of.',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'ref',
+            ref: 'lex:app.bsky.merchant.defs#merchantView',
+          },
+        },
+      },
+    },
+  },
   AppBskyNotificationGetUnreadCount: {
     lexicon: 1,
     id: 'app.bsky.notification.getUnreadCount',
@@ -9245,6 +9434,7 @@ export const ids = {
   ComAtprotoServerCreateAppPassword: 'com.atproto.server.createAppPassword',
   ComAtprotoServerCreateInviteCode: 'com.atproto.server.createInviteCode',
   ComAtprotoServerCreateInviteCodes: 'com.atproto.server.createInviteCodes',
+  ComAtprotoServerCreateMerchant: 'com.atproto.server.createMerchant',
   ComAtprotoServerCreateSession: 'com.atproto.server.createSession',
   ComAtprotoServerDeactivateAccount: 'com.atproto.server.deactivateAccount',
   ComAtprotoServerDefs: 'com.atproto.server.defs',
@@ -9343,6 +9533,8 @@ export const ids = {
   AppBskyLabelerDefs: 'app.bsky.labeler.defs',
   AppBskyLabelerGetServices: 'app.bsky.labeler.getServices',
   AppBskyLabelerService: 'app.bsky.labeler.service',
+  AppBskyMerchantDefs: 'app.bsky.merchant.defs',
+  AppBskyMerchantGetMerchant: 'app.bsky.merchant.getMerchant',
   AppBskyNotificationGetUnreadCount: 'app.bsky.notification.getUnreadCount',
   AppBskyNotificationListNotifications:
     'app.bsky.notification.listNotifications',
