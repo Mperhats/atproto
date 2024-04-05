@@ -1,5 +1,4 @@
 packages:
   - 'services/*'
   - 'packages/*'
-  - 'packages/oauth/*'
-  - 'packages/internal/*'
+  - 'apps/*'

@@ -12,6 +12,64 @@ import { Views } from '../../../../views'
 import { resHeaders } from '../../../util'
 
 export default function (server: Server, ctx: AppContext) {
+  const skeleton = async (input: {
+    ctx: Context
+    params: Params
+  }): Promise<SkeletonState> => {
+    const { ctx, params } = input
+    const [did] = await ctx.hydrator.actor.getDids([params.actor])
+    if (!did) {
+      throw new InvalidRequestError('Profile not found')
+    }
+    return { did }
+  }
+
+  const hydration = async (input: {
+    ctx: Context
+    params: Params
+    skeleton: SkeletonState
+  }) => {
+    const { ctx, params, skeleton } = input
+    return ctx.hydrator.hydrateProfilesDetailed(
+      [skeleton.did],
+      params.hydrateCtx.copy({ includeTakedowns: true }),
+    )
+  }
+
+  // presentation definition defines a type definition for a view. similar to a dto.
+  const presentation = (input: {
+    ctx: Context
+    params: Params
+    skeleton: SkeletonState
+    hydration: HydrationState
+  }) => {
+    const { ctx, params, skeleton, hydration } = input
+    const profile = ctx.views.profileDetailed(skeleton.did, hydration)
+    if (!profile) {
+      throw new InvalidRequestError('Profile not found')
+    } else if (
+      !params.hydrateCtx.includeTakedowns &&
+      ctx.views.actorIsTakendown(skeleton.did, hydration)
+    ) {
+      throw new InvalidRequestError(
+        'Account has been suspended',
+        'AccountTakedown',
+      )
+    }
+    return profile
+  }
+
+  type Context = {
+    hydrator: Hydrator
+    views: Views
+  }
+
+  type Params = QueryParams & {
+    hydrateCtx: HydrateCtx
+  }
+
+  type SkeletonState = { did: string }
+
   const getProfile = createPipeline(skeleton, hydration, noRules, presentation)
   server.app.bsky.actor.getProfile({
     auth: ctx.authVerifier.optionalStandardOrRole,
@@ -39,66 +97,3 @@ export default function (server: Server, ctx: AppContext) {
     },
   })
 }
-
-const skeleton = async (input: {
-  ctx: Context
-  params: Params
-}): Promise<SkeletonState> => {
-  const { ctx, params } = input
-  const [did] = await ctx.hydrator.actor.getDids([params.actor])
-  if (!did) {
-    throw new InvalidRequestError('Profile not found')
-  }
-  return { did }
-}
-
-const hydration = async (input: {
-  ctx: Context
-  params: Params
-  skeleton: SkeletonState
-}) => {
-  const { ctx, params, skeleton } = input
-  return ctx.hydrator.hydrateProfilesDetailed(
-    [skeleton.did],
-    params.hydrateCtx.copy({
-      includeActorTakedowns: true,
-    }),
-  )
-}
-
-const presentation = (input: {
-  ctx: Context
-  params: Params
-  skeleton: SkeletonState
-  hydration: HydrationState
-}) => {
-  const { ctx, params, skeleton, hydration } = input
-  const profile = ctx.views.profileDetailed(skeleton.did, hydration)
-  if (!profile) {
-    throw new InvalidRequestError('Profile not found')
-  } else if (!params.hydrateCtx.includeTakedowns) {
-    if (ctx.views.actorIsTakendown(skeleton.did, hydration)) {
-      throw new InvalidRequestError(
-        'Account has been suspended',
-        'AccountTakedown',
-      )
-    } else if (ctx.views.actorIsDeactivated(skeleton.did, hydration)) {
-      throw new InvalidRequestError(
-        'Account is deactivated',
-        'AccountDeactivated',
-      )
-    }
-  }
-  return profile
-}
-
-type Context = {
-  hydrator: Hydrator
-  views: Views
-}
-
-type Params = QueryParams & {
-  hydrateCtx: HydrateCtx
-}
-
-type SkeletonState = { did: string }

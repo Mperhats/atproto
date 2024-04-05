@@ -15,3 +15,6 @@ test.sqlite
 \#*\#
 *~
 *.swp
+
+apps/*/.next
+./next
