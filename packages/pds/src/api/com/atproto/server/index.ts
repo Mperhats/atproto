@@ -34,10 +34,12 @@ import getServiceAuth from './getServiceAuth'
 import checkAccountStatus from './checkAccountStatus'
 import activateAccount from './activateAccount'
 import deactivateAccount from './deactivateAccount'
+import createMerchant from './createMerchant'
 
 export default function (server: Server, ctx: AppContext) {
   describeServer(server, ctx)
   createAccount(server, ctx)
+  createMerchant(server, ctx)
   createInviteCode(server, ctx)
   createInviteCodes(server, ctx)
   getAccountInviteCodes(server, ctx)

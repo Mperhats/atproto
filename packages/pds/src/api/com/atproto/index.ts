@@ -13,7 +13,7 @@ export default function (server: Server, ctx: AppContext) {
   identity(server, ctx)
   moderation(server, ctx)
   repo(server, ctx)
-  serverMethods(server, ctx)
+  serverMethods(server, ctx) // represents account creation, etc.
   sync(server, ctx)
   temp(server, ctx)
 }

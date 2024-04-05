@@ -7444,6 +7444,39 @@ export const schemaDict = {
           },
         },
       },
+      viewerState: {
+        type: 'object',
+        description:
+          "Metadata about the requesting account's relationship with the subject account. Only has meaningful content for authed requests.",
+        properties: {
+          muted: {
+            type: 'boolean',
+          },
+          mutedByList: {
+            type: 'ref',
+            ref: 'lex:app.bsky.graph.defs#listViewBasic',
+          },
+          blockedBy: {
+            type: 'boolean',
+          },
+          blocking: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          blockingByList: {
+            type: 'ref',
+            ref: 'lex:app.bsky.graph.defs#listViewBasic',
+          },
+          following: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          followedBy: {
+            type: 'string',
+            format: 'at-uri',
+          },
+        },
+      },
     },
   },
   AppBskyMerchantGetMerchant: {

@@ -26,6 +26,25 @@
             "items": { "type": "ref", "ref": "com.atproto.label.defs#label" }
           }
         }
+      },
+      "viewerState": {
+        "type": "object",
+        "description": "Metadata about the requesting account's relationship with the subject account. Only has meaningful content for authed requests.",
+        "properties": {
+          "muted": { "type": "boolean" },
+          "mutedByList": {
+            "type": "ref",
+            "ref": "app.bsky.graph.defs#listViewBasic"
+          },
+          "blockedBy": { "type": "boolean" },
+          "blocking": { "type": "string", "format": "at-uri" },
+          "blockingByList": {
+            "type": "ref",
+            "ref": "app.bsky.graph.defs#listViewBasic"
+          },
+          "following": { "type": "string", "format": "at-uri" },
+          "followedBy": { "type": "string", "format": "at-uri" }
+        }
       }
     }
   }
