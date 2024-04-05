@@ -274,11 +274,12 @@ export async function gen(
 ): Promise<GeneratedFile> {
   const file = project.createSourceFile(path)
   await gen(file)
-  await file.save() // Save in the "in memory" file system
-  const src = `${banner()}${file.getFullText()}`
-  const content = await format(src, PRETTIER_OPTS)
-
-  return { path, content }
+  file.saveSync()
+  const src = project.getFileSystem().readFileSync(path)
+  return {
+    path: path,
+    content: `${banner()}${await prettier.format(src, PRETTIER_OPTS)}`,
+  }
 }
 
 function banner() {

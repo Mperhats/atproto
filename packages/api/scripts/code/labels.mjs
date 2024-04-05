@@ -67,7 +67,7 @@ async function gen() {
 
   export const LABELS: Record<KnownLabelValue, InterpretedLabelValueDefinition> = ${labelDefsStr}
   `,
-    { semi: false, parser: 'typescript', singleQuote: true },
+    { semi: false, parser: 'babel-ts', singleQuote: true },
   )
 }
 
