@@ -19,11 +19,11 @@ test: ## Run all tests
 	pnpm test
 
 .PHONY: run-dev-env
-run-dev-env: ## Run a "development environment" shell
+run: ## Run a "development environment" shell
 	cd packages/dev-env; pnpm run start
 
 .PHONY: run-dev-env-logged
-run-dev-env-logged: ## Run a "development environment" shell (with logging)
+run-logged: ## Run a "development environment" shell (with logging)
 	LOG_ENABLED=true cd packages/dev-env; pnpm run start | pnpm exec pino-pretty
 
 .PHONY: codegen

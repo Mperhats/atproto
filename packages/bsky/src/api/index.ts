@@ -46,6 +46,7 @@ import getAccountInfos from './com/atproto/admin/getAccountInfos'
 import resolveHandle from './com/atproto/identity/resolveHandle'
 import getRecord from './com/atproto/repo/getRecord'
 import fetchLabels from './com/atproto/temp/fetchLabels'
+import getMerchant from './app/bsky/merchant/getMerchant'
 
 export * as health from './health'
 
@@ -55,6 +56,7 @@ export * as blobResolver from './blob-resolver'
 
 export default function (server: Server, ctx: AppContext) {
   // app.bsky
+  getMerchant(server, ctx)
   getTimeline(server, ctx)
   getActorFeeds(server, ctx)
   getSuggestedFeeds(server, ctx)
