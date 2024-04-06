@@ -75,7 +75,7 @@ export default function (server: Server, ctx: AppContext) {
 
       const result = await getMerchant({ ...params, hydrateCtx }, ctx)
 
-      const repoRev = await ctx.hydrator.actor.getRepoRevSafe(viewer)
+      const repoRev = await ctx.hydrator.merchant.getRepoRevSafe(viewer)
 
       return {
         encoding: 'application/json',
