@@ -17,6 +17,7 @@ export default function (server: Server, ctx: AppContext) {
     params: Params
   }): Promise<SkeletonState> => {
     const { ctx, params } = input
+    console.log('parse my ass@!!!!')
     const [did] = await ctx.hydrator.merchant.getDids([params.merchant])
     if (!did) {
       throw new InvalidRequestError('Profile not found')

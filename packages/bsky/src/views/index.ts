@@ -63,6 +63,7 @@ export class Views {
 
   merchant(did: string, state: HydrationState): MerchantView | undefined {
     const merchant = state.merchants?.get(did)
+    console.log('merchant')
     if (!merchant) return
     const basicView = this.merchantBasic(did, state)
     if (!basicView) return
