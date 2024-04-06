@@ -25,9 +25,11 @@ import { DiskBlobStore } from './disk-blobstore'
 import { getRedisClient } from './redis'
 import { ActorStore } from './actor-store'
 import { LocalViewer, LocalViewerCreator } from './read-after-write/viewer'
+import { MerchantStore } from './merchant-store'
 
 export type AppContextOptions = {
   actorStore: ActorStore
+  merchantStore: MerchantStore
   blobstore: (did: string) => BlobStore
   localViewer: LocalViewerCreator
   mailer: ServerMailer
@@ -51,6 +53,7 @@ export type AppContextOptions = {
 
 export class AppContext {
   public actorStore: ActorStore
+  public merchantStore: MerchantStore
   public blobstore: (did: string) => BlobStore
   public localViewer: LocalViewerCreator
   public mailer: ServerMailer
@@ -73,6 +76,7 @@ export class AppContext {
 
   constructor(opts: AppContextOptions) {
     this.actorStore = opts.actorStore
+    this.merchantStore = opts.merchantStore
     this.blobstore = opts.blobstore
     this.localViewer = opts.localViewer
     this.mailer = opts.mailer
@@ -209,6 +213,11 @@ export class AppContext {
       backgroundQueue,
     })
 
+    const merchantStore = new MerchantStore(cfg.merchantStore, {
+      blobstore,
+      backgroundQueue,
+    })
+
     const localViewer = LocalViewer.creator({
       accountManager,
       appViewAgent,
@@ -219,6 +228,7 @@ export class AppContext {
 
     return new AppContext({
       actorStore,
+      merchantStore,
       blobstore,
       localViewer,
       mailer,

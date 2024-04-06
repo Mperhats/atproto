@@ -18,8 +18,13 @@ build: ## Compile all modules
 test: ## Run all tests
 	pnpm test
 
-.PHONY: run-dev-env
+.PHONY: run
 run: ## Run a "development environment" shell
+	cd packages/dev-env; pnpm run start
+
+.PHONY: rerun
+rerun: ## Compile all modules and run a "development environment" shell
+	pnpm build
 	cd packages/dev-env; pnpm run start
 
 .PHONY: run-dev-env-logged

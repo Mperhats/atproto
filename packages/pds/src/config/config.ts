@@ -47,6 +47,12 @@ export const envToCfg = (env: ServerEnvironment): ServerConfig => {
     disableWalAutoCheckpoint,
   }
 
+  const merchantStoreCfg: ServerConfig['merchantStore'] = {
+    directory: env.actorStoreDirectory ?? dbLoc('merchants'),
+    cacheSize: env.actorStoreCacheSize ?? 100,
+    disableWalAutoCheckpoint,
+  }
+
   let blobstoreCfg: ServerConfig['blobstore']
   if (env.blobstoreS3Bucket && env.blobstoreDiskLocation) {
     throw new Error('Cannot set both S3 and disk blobstore env vars')
@@ -237,6 +243,7 @@ export const envToCfg = (env: ServerEnvironment): ServerConfig => {
     service: serviceCfg,
     db: dbCfg,
     actorStore: actorStoreCfg,
+    merchantStore: merchantStoreCfg,
     blobstore: blobstoreCfg,
     identity: identityCfg,
     entryway: entrywayCfg,
@@ -257,6 +264,7 @@ export type ServerConfig = {
   service: ServiceConfig
   db: DatabaseConfig
   actorStore: ActorStoreConfig
+  merchantStore: MerchantStoreConfig
   blobstore: S3BlobstoreConfig | DiskBlobstoreConfig
   identity: IdentityConfig
   entryway: EntrywayConfig | null
@@ -294,6 +302,12 @@ export type DatabaseConfig = {
 }
 
 export type ActorStoreConfig = {
+  directory: string
+  cacheSize: number
+  disableWalAutoCheckpoint: boolean
+}
+
+export type MerchantStoreConfig = {
   directory: string
   cacheSize: number
   disableWalAutoCheckpoint: boolean

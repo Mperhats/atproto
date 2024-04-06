@@ -75,6 +75,25 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .execute()
 
   await db.schema
+    .createTable('merchant')
+    .addColumn('did', 'varchar', (col) => col.primaryKey())
+    .addColumn('handle', 'varchar')
+    .addColumn('createdAt', 'varchar', (col) => col.notNull())
+    .addColumn('takedownRef', 'varchar')
+    .execute()
+  await db.schema
+    .createIndex(`merchant_handle_lower_idx`)
+    .unique()
+    .on('merchant')
+    .expression(sql`lower("handle")`)
+    .execute()
+  await db.schema
+    .createIndex('merchant_cursor_idx')
+    .on('merchant')
+    .columns(['createdAt', 'did'])
+    .execute()
+
+  await db.schema
     .createTable('account')
     .addColumn('did', 'varchar', (col) => col.primaryKey())
     .addColumn('email', 'varchar', (col) => col.notNull())
@@ -107,6 +126,7 @@ export async function down(db: Kysely<unknown>): Promise<void> {
   await db.schema.dropTable('email_token').execute()
   await db.schema.dropTable('account').execute()
   await db.schema.dropTable('actor').execute()
+  await db.schema.dropTable('merchant').execute()
   await db.schema.dropTable('repo_root').execute()
   await db.schema.dropTable('refresh_token').execute()
   await db.schema.dropTable('invite_code_use').execute()

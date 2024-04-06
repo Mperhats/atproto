@@ -1,4 +1,5 @@
 import * as actor from './actor'
+import * as merchant from './merchant'
 import * as account from './account'
 import * as repoRoot from './repo-root'
 import * as refreshToken from './refresh-token'
@@ -7,6 +8,7 @@ import * as inviteCode from './invite-code'
 import * as emailToken from './email-token'
 
 export type DatabaseSchema = actor.PartialDB &
+  merchant.PartialDB &
   account.PartialDB &
   refreshToken.PartialDB &
   appPassword.PartialDB &
@@ -15,6 +17,7 @@ export type DatabaseSchema = actor.PartialDB &
   emailToken.PartialDB
 
 export type { Actor, ActorEntry } from './actor'
+export type { Merchant, MerchantEntry } from './merchant'
 export type { Account, AccountEntry } from './account'
 export type { RepoRoot } from './repo-root'
 export type { RefreshToken } from './refresh-token'

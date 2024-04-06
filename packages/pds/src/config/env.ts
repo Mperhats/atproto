@@ -25,6 +25,10 @@ export const readEnv = (): ServerEnvironment => {
     actorStoreDirectory: envStr('PDS_ACTOR_STORE_DIRECTORY'),
     actorStoreCacheSize: envInt('PDS_ACTOR_STORE_CACHE_SIZE'),
 
+    // actor store
+    merchantStoreDirectory: envStr('PDS_MERCHANT_STORE_DIRECTORY'),
+    merchantStoreCacheSize: envInt('PDS_MERCHANT_STORE_CACHE_SIZE'),
+
     // blobstore: one required
     // s3
     blobstoreS3Bucket: envStr('PDS_BLOBSTORE_S3_BUCKET'),
@@ -131,6 +135,10 @@ export type ServerEnvironment = {
   // actor store
   actorStoreDirectory?: string
   actorStoreCacheSize?: number
+
+  // merchant store
+  merchantStoreDirectory?: string
+  merchantStoreCacheSize?: number
 
   // blobstore: one required
   blobstoreS3Bucket?: string

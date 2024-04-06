@@ -10,7 +10,7 @@ import {
   readIfExists,
   rmIfExists,
 } from '@atproto/common'
-import { ActorDb, getDb, getMigrator } from './db'
+import { MerchantDb, getDb, getMigrator } from './db'
 import { BackgroundQueue } from '../background'
 import { RecordReader } from './record/reader'
 import { PreferenceReader } from './preference/reader'
@@ -22,21 +22,21 @@ import { RecordTransactor } from './record/transactor'
 import { CID } from 'multiformats/cid'
 import DiskBlobStore from '../disk-blobstore'
 import { mkdir } from 'fs/promises'
+import { MerchantStoreConfig } from '../config'
 import { retrySqlite } from '../db'
-import { ActorStoreConfig } from '../config'
 
-type ActorStoreResources = {
+type MerchantStoreResources = {
   blobstore: (did: string) => BlobStore
   backgroundQueue: BackgroundQueue
   reservedKeyDir?: string
 }
 
-export class ActorStore {
+export class MerchantStore {
   reservedKeyDir: string
 
   constructor(
-    public cfg: ActorStoreConfig,
-    public resources: ActorStoreResources,
+    public cfg: MerchantStoreConfig,
+    public resources: MerchantStoreResources,
   ) {
     this.reservedKeyDir = path.join(cfg.directory, 'reserved_keys')
   }
@@ -60,7 +60,7 @@ export class ActorStore {
     return crypto.Secp256k1Keypair.import(privKey)
   }
 
-  async openDb(did: string): Promise<ActorDb> {
+  async openDb(did: string): Promise<MerchantDb> {
     const { dbLocation } = await this.getLocation(did)
     const exists = await fileExists(dbLocation)
     if (!exists) {
@@ -82,10 +82,10 @@ export class ActorStore {
     return db
   }
 
-  async read<T>(did: string, fn: ActorStoreReadFn<T>) {
+  async read<T>(did: string, fn: MerchantStoreReadFn<T>) {
     const db = await this.openDb(did)
     try {
-      const reader = createActorReader(did, db, this.resources, () =>
+      const reader = createMerchantReader(did, db, this.resources, () =>
         this.keypair(did),
       )
       return await fn(reader)
@@ -94,12 +94,12 @@ export class ActorStore {
     }
   }
 
-  async transact<T>(did: string, fn: ActorStoreTransactFn<T>) {
+  async transact<T>(did: string, fn: MerchantStoreTransactFn<T>) {
     const keypair = await this.keypair(did)
     const db = await this.openDb(did)
     try {
       return await db.transaction((dbTxn) => {
-        const store = createActorTransactor(did, dbTxn, keypair, this.resources)
+        const store = createMerchantTransactor(did, dbTxn, keypair, this.resources)
         return fn(store)
       })
     } finally {
@@ -107,16 +107,16 @@ export class ActorStore {
     }
   }
 
-  async writeNoTransaction<T>(did: string, fn: ActorStoreWriterFn<T>) {
+  async writeNoTransaction<T>(did: string, fn: MerchantStoreWriterFn<T>) {
     const keypair = await this.keypair(did)
     const db = await this.openDb(did)
     try {
-      const writer = createActorTransactor(did, db, keypair, this.resources)
+      const writer = createMerchantTransactor(did, db, keypair, this.resources)
       return await fn({
         ...writer,
-        transact: async <T>(fn: ActorStoreTransactFn<T>): Promise<T> => {
+        transact: async <T>(fn: MerchantStoreTransactFn<T>): Promise<T> => {
           return db.transaction((dbTxn) => {
-            const transactor = createActorTransactor(
+            const transactor = createMerchantTransactor(
               did,
               dbTxn,
               keypair,
@@ -142,7 +142,7 @@ export class ActorStore {
     const privKey = await keypair.export()
     await fs.writeFile(keyLocation, privKey)
 
-    const db: ActorDb = getDb(dbLocation, this.cfg.disableWalAutoCheckpoint)
+    const db: MerchantDb = getDb(dbLocation, this.cfg.disableWalAutoCheckpoint)
     try {
       await db.ensureWal()
       const migrator = getMigrator(db)
@@ -226,12 +226,12 @@ const loadKey = async (loc: string): Promise<ExportableKeypair | undefined> => {
   return crypto.Secp256k1Keypair.import(privKey, { exportable: true })
 }
 
-const createActorTransactor = (
+const createMerchantTransactor = (
   did: string,
-  db: ActorDb,
+  db: MerchantDb,
   keypair: Keypair,
-  resources: ActorStoreResources,
-): ActorStoreTransactor => {
+  resources: MerchantStoreResources,
+): MerchantStoreTransactor => {
   const { blobstore, backgroundQueue } = resources
   const userBlobstore = blobstore(did)
   return {
@@ -243,12 +243,12 @@ const createActorTransactor = (
   }
 }
 
-const createActorReader = (
+const createMerchantReader = (
   did: string,
-  db: ActorDb,
-  resources: ActorStoreResources,
+  db: MerchantDb,
+  resources: MerchantStoreResources,
   getKeypair: () => Promise<Keypair>,
-): ActorStoreReader => {
+): MerchantStoreReader => {
   const { blobstore } = resources
   return {
     did,
@@ -257,40 +257,40 @@ const createActorReader = (
     record: new RecordReader(db),
     pref: new PreferenceReader(db),
     keypair: getKeypair,
-    transact: async <T>(fn: ActorStoreTransactFn<T>): Promise<T> => {
+    transact: async <T>(fn: MerchantStoreTransactFn<T>): Promise<T> => {
       const keypair = await getKeypair()
       return db.transaction((dbTxn) => {
-        const store = createActorTransactor(did, dbTxn, keypair, resources)
+        const store = createMerchantTransactor(did, dbTxn, keypair, resources)
         return fn(store)
       })
     },
   }
 }
 
-export type ActorStoreReadFn<T> = (fn: ActorStoreReader) => Promise<T>
-export type ActorStoreTransactFn<T> = (fn: ActorStoreTransactor) => Promise<T>
-export type ActorStoreWriterFn<T> = (fn: ActorStoreWriter) => Promise<T>
+export type MerchantStoreReadFn<T> = (fn: MerchantStoreReader) => Promise<T>
+export type MerchantStoreTransactFn<T> = (fn: MerchantStoreTransactor) => Promise<T>
+export type MerchantStoreWriterFn<T> = (fn: MerchantStoreWriter) => Promise<T>
 
-export type ActorStoreReader = {
+export type MerchantStoreReader = {
   did: string
-  db: ActorDb
+  db: MerchantDb
   repo: RepoReader
   record: RecordReader
   pref: PreferenceReader
   keypair: () => Promise<Keypair>
-  transact: <T>(fn: ActorStoreTransactFn<T>) => Promise<T>
+  transact: <T>(fn: MerchantStoreTransactFn<T>) => Promise<T>
 }
 
-export type ActorStoreTransactor = {
+export type MerchantStoreTransactor = {
   did: string
-  db: ActorDb
+  db: MerchantDb
   repo: RepoTransactor
   record: RecordTransactor
   pref: PreferenceTransactor
 }
 
-export type ActorStoreWriter = ActorStoreTransactor & {
-  transact: <T>(fn: ActorStoreTransactFn<T>) => Promise<T>
+export type MerchantStoreWriter = MerchantStoreTransactor & {
+  transact: <T>(fn: MerchantStoreTransactFn<T>) => Promise<T>
 }
 
 function assertSafePathPart(part: string) {
