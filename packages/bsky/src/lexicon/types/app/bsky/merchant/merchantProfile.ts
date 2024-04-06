@@ -25,11 +25,11 @@ export function isRecord(v: unknown): v is Record {
   return (
     isObj(v) &&
     hasProp(v, '$type') &&
-    (v.$type === 'app.bsky.merchant.profile#main' ||
-      v.$type === 'app.bsky.merchant.profile')
+    (v.$type === 'app.bsky.merchant.merchantProfile#main' ||
+      v.$type === 'app.bsky.merchant.merchantProfile')
   )
 }
 
 export function validateRecord(v: unknown): ValidationResult {
-  return lexicons.validate('app.bsky.merchant.profile#main', v)
+  return lexicons.validate('app.bsky.merchant.merchantProfile#main', v)
 }

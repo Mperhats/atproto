@@ -14,10 +14,7 @@ import {
   ProfileViewerStates,
   ProfileViewerState,
 } from './actor'
-import {
-  MerchantHydrator,
-  Merchants,
-} from './merchant'
+import { MerchantHydrator, Merchants } from './merchant'
 import {
   Follows,
   GraphHydrator,
@@ -76,7 +73,7 @@ export type HydrateCtxVals = {
 export type HydrationState = {
   ctx?: HydrateCtx
   actors?: Actors
-  merchants?:Merchants
+  merchants?: Merchants
   profileViewers?: ProfileViewerStates
   profileAggs?: ProfileAggs
   posts?: Posts
@@ -127,7 +124,7 @@ export class Hydrator {
     this.serviceLabelers = new Set(serviceLabelers)
   }
 
-    // app.bsky.merchant.defs#merchantView
+  // app.bsky.merchant.defs#merchantView
   // - profile viewer
   //   - list basic
   // Note: builds on the naive profile viewer hydrator and removes references to lists that have been deleted
@@ -156,7 +153,6 @@ export class Hydrator {
     })
   }
 
-
   // app.bsky.merchant.defs#merchantView
   // - profile
   //   - list basic
@@ -175,7 +171,6 @@ export class Hydrator {
       ctx,
     })
   }
-
 
   // app.bsky.actor.defs#profileView
   // - profile viewer
@@ -256,8 +251,6 @@ export class Hydrator {
       profileAggs,
     }
   }
-
-
 
   // app.bsky.graph.defs#listView
   // - list

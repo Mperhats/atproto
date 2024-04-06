@@ -7509,9 +7509,9 @@ export const schemaDict = {
       },
     },
   },
-  AppBskyMerchantProfile: {
+  AppBskyMerchantMerchantProfile: {
     lexicon: 1,
-    id: 'app.bsky.merchant.profile',
+    id: 'app.bsky.merchant.merchantProfile',
     defs: {
       main: {
         type: 'record',
@@ -9615,7 +9615,7 @@ export const ids = {
   AppBskyLabelerService: 'app.bsky.labeler.service',
   AppBskyMerchantDefs: 'app.bsky.merchant.defs',
   AppBskyMerchantGetMerchant: 'app.bsky.merchant.getMerchant',
-  AppBskyMerchantProfile: 'app.bsky.merchant.profile',
+  AppBskyMerchantMerchantProfile: 'app.bsky.merchant.merchantProfile',
   AppBskyNotificationGetUnreadCount: 'app.bsky.notification.getUnreadCount',
   AppBskyNotificationListNotifications:
     'app.bsky.notification.listNotifications',

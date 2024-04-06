@@ -68,20 +68,17 @@ export class Views {
     if (!basicView) return
     return {
       ...basicView,
-      description: merchant.profile?.description || undefined,
+      description: merchant.merchantProfile?.description || undefined,
       indexedAt: merchant.sortedAt?.toISOString(),
     }
   }
 
-  merchantBasic(
-    did: string,
-    state: HydrationState,
-  ): MerchantView | undefined {
+  merchantBasic(did: string, state: HydrationState): MerchantView | undefined {
     const merchant = state.merchants?.get(did)
     if (!merchant) return
     const profileUri = AtUri.make(
       did,
-      ids.AppBskyMerchantProfile,
+      ids.AppBskyMerchantMerchantProfile,
       'self',
     ).toString()
     const labels = [
@@ -90,18 +87,18 @@ export class Views {
       ...this.selfLabels({
         uri: profileUri,
         cid: merchant.profileCid?.toString(),
-        record: merchant.profile,
+        record: merchant.merchantProfile,
       }),
     ]
     return {
       did,
       handle: merchant.handle ?? INVALID_HANDLE,
-      displayName: merchant.profile?.displayName,
-      avatar: merchant.profile?.avatar
+      displayName: merchant.merchantProfile?.displayName,
+      avatar: merchant.merchantProfile?.avatar
         ? this.imgUriBuilder.getPresetUri(
             'avatar',
             did,
-            cidFromBlobJson(merchant.profile.avatar),
+            cidFromBlobJson(merchant.merchantProfile.avatar),
           )
         : undefined,
       // associated.feedgens and associated.lists info not necessarily included

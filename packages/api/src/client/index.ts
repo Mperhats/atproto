@@ -145,7 +145,7 @@ import * as AppBskyLabelerGetServices from './types/app/bsky/labeler/getServices
 import * as AppBskyLabelerService from './types/app/bsky/labeler/service'
 import * as AppBskyMerchantDefs from './types/app/bsky/merchant/defs'
 import * as AppBskyMerchantGetMerchant from './types/app/bsky/merchant/getMerchant'
-import * as AppBskyMerchantProfile from './types/app/bsky/merchant/profile'
+import * as AppBskyMerchantMerchantProfile from './types/app/bsky/merchant/merchantProfile'
 import * as AppBskyNotificationGetUnreadCount from './types/app/bsky/notification/getUnreadCount'
 import * as AppBskyNotificationListNotifications from './types/app/bsky/notification/listNotifications'
 import * as AppBskyNotificationRegisterPush from './types/app/bsky/notification/registerPush'
@@ -308,7 +308,7 @@ export * as AppBskyLabelerGetServices from './types/app/bsky/labeler/getServices
 export * as AppBskyLabelerService from './types/app/bsky/labeler/service'
 export * as AppBskyMerchantDefs from './types/app/bsky/merchant/defs'
 export * as AppBskyMerchantGetMerchant from './types/app/bsky/merchant/getMerchant'
-export * as AppBskyMerchantProfile from './types/app/bsky/merchant/profile'
+export * as AppBskyMerchantMerchantProfile from './types/app/bsky/merchant/merchantProfile'
 export * as AppBskyNotificationGetUnreadCount from './types/app/bsky/notification/getUnreadCount'
 export * as AppBskyNotificationListNotifications from './types/app/bsky/notification/listNotifications'
 export * as AppBskyNotificationRegisterPush from './types/app/bsky/notification/registerPush'
@@ -2548,11 +2548,11 @@ export class ServiceRecord {
 
 export class AppBskyMerchantNS {
   _service: AtpServiceClient
-  profile: ProfileRecord
+  merchantProfile: MerchantProfileRecord
 
   constructor(service: AtpServiceClient) {
     this._service = service
-    this.profile = new ProfileRecord(service)
+    this.merchantProfile = new MerchantProfileRecord(service)
   }
 
   getMerchant(
@@ -2567,7 +2567,7 @@ export class AppBskyMerchantNS {
   }
 }
 
-export class ProfileRecord {
+export class MerchantProfileRecord {
   _service: AtpServiceClient
 
   constructor(service: AtpServiceClient) {
@@ -2578,10 +2578,10 @@ export class ProfileRecord {
     params: Omit<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
   ): Promise<{
     cursor?: string
-    records: { uri: string; value: AppBskyMerchantProfile.Record }[]
+    records: { uri: string; value: AppBskyMerchantMerchantProfile.Record }[]
   }> {
     const res = await this._service.xrpc.call('com.atproto.repo.listRecords', {
-      collection: 'app.bsky.merchant.profile',
+      collection: 'app.bsky.merchant.merchantProfile',
       ...params,
     })
     return res.data
@@ -2592,10 +2592,10 @@ export class ProfileRecord {
   ): Promise<{
     uri: string
     cid: string
-    value: AppBskyMerchantProfile.Record
+    value: AppBskyMerchantMerchantProfile.Record
   }> {
     const res = await this._service.xrpc.call('com.atproto.repo.getRecord', {
-      collection: 'app.bsky.merchant.profile',
+      collection: 'app.bsky.merchant.merchantProfile',
       ...params,
     })
     return res.data
@@ -2606,15 +2606,15 @@ export class ProfileRecord {
       ComAtprotoRepoCreateRecord.InputSchema,
       'collection' | 'record'
     >,
-    record: AppBskyMerchantProfile.Record,
+    record: AppBskyMerchantMerchantProfile.Record,
     headers?: Record<string, string>,
   ): Promise<{ uri: string; cid: string }> {
-    record.$type = 'app.bsky.merchant.profile'
+    record.$type = 'app.bsky.merchant.merchantProfile'
     const res = await this._service.xrpc.call(
       'com.atproto.repo.createRecord',
       undefined,
       {
-        collection: 'app.bsky.merchant.profile',
+        collection: 'app.bsky.merchant.merchantProfile',
         rkey: 'self',
         ...params,
         record,
@@ -2631,7 +2631,7 @@ export class ProfileRecord {
     await this._service.xrpc.call(
       'com.atproto.repo.deleteRecord',
       undefined,
-      { collection: 'app.bsky.merchant.profile', ...params },
+      { collection: 'app.bsky.merchant.merchantProfile', ...params },
       { headers },
     )
   }

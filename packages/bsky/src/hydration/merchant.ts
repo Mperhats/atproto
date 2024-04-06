@@ -1,5 +1,5 @@
 import { DataPlaneClient } from '../data-plane/client'
-import { Record as ProfileRecord } from '../lexicon/types/app/bsky/merchant/profile'
+import { Record as MerchantProfileRecord } from '../lexicon/types/app/bsky/merchant/merchantProfile'
 import {
   HydrationMap,
   parseRecordBytes,
@@ -10,7 +10,7 @@ import {
 export type Merchant = {
   did: string
   handle?: string
-  profile?: ProfileRecord
+  merchantProfile?: MerchantProfileRecord
   profileCid?: string
   profileTakedownRef?: string
   sortedAt?: Date
@@ -57,7 +57,9 @@ export class MerchantHydrator {
   }
 
   async getDids(handleOrDids: string[]): Promise<(string | undefined)[]> {
-    const handles = handleOrDids.filter((merchant) => !merchant.startsWith('did:'))
+    const handles = handleOrDids.filter(
+      (merchant) => !merchant.startsWith('did:'),
+    )
     const res = handles.length
       ? await this.dataplane.getDidsByHandles({ handles })
       : { dids: [] }
@@ -104,7 +106,7 @@ export class MerchantHydrator {
       return acc.set(did, {
         did,
         handle: parseString(actor.handle),
-        profile: parseRecordBytes<ProfileRecord>(profile?.record),
+        merchantProfile: parseRecordBytes<MerchantProfileRecord>(profile?.record),
         profileCid: profile?.cid,
         profileTakedownRef: safeTakedownRef(profile),
         sortedAt: profile?.sortedAt?.toDate(),

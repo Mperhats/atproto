@@ -46,7 +46,7 @@ export default function (server: Server, ctx: AppContext) {
     const profile = ctx.views.merchant(skeleton.did, hydration)
     if (!profile) {
       throw new InvalidRequestError('Profile not found')
-    } 
+    }
     return profile
   }
 
