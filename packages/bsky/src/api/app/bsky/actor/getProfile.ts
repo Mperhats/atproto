@@ -74,9 +74,6 @@ export default function (server: Server, ctx: AppContext) {
   server.app.bsky.actor.getProfile({
     auth: ctx.authVerifier.optionalStandardOrRole,
     handler: async ({ auth, params, req }) => {
-
-      console.info('I have not a fucking clue what is happening.')
-
       const { viewer, includeTakedowns } = ctx.authVerifier.parseCreds(auth)
       const labelers = ctx.reqLabelers(req)
       const hydrateCtx = await ctx.hydrator.createContext({
