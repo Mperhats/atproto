@@ -43,7 +43,7 @@ export type ProfileAgg = {
 
 export type ProfileAggs = HydrationMap<ProfileAgg>
 
-export class ActorHydrator {
+export class MerchantHydrator {
   constructor(public dataplane: DataPlaneClient) {}
 
   async getRepoRevSafe(did: string | null): Promise<string | null> {
@@ -57,7 +57,7 @@ export class ActorHydrator {
   }
 
   async getDids(handleOrDids: string[]): Promise<(string | undefined)[]> {
-    const handles = handleOrDids.filter((actor) => !actor.startsWith('did:'))
+    const handles = handleOrDids.filter((merchant) => !merchant.startsWith('did:'))
     const res = handles.length
       ? await this.dataplane.getDidsByHandles({ handles })
       : { dids: [] }
@@ -87,9 +87,9 @@ export class ActorHydrator {
     includeTakedowns = false,
   ): Promise<Merchants> {
     if (!dids.length) return new HydrationMap<Merchant>()
-    const res = await this.dataplane.getActors({ dids })
+    const res = await this.dataplane.getMerchants({ dids })
     return dids.reduce((acc, did, i) => {
-      const actor = res.actors[i]
+      const actor = res.merchants[i]
       if (
         !actor.exists ||
         (actor.takenDown && !includeTakedowns) ||

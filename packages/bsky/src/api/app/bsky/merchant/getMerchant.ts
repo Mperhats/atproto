@@ -17,7 +17,7 @@ export default function (server: Server, ctx: AppContext) {
     params: Params
   }): Promise<SkeletonState> => {
     const { ctx, params } = input
-    const [did] = await ctx.hydrator.actor.getDids([params.merchant])
+    const [did] = await ctx.hydrator.merchant.getDids([params.merchant])
     if (!did) {
       throw new InvalidRequestError('Profile not found')
     }
@@ -30,12 +30,11 @@ export default function (server: Server, ctx: AppContext) {
     skeleton: SkeletonState
   }) => {
     const { ctx, params, skeleton } = input
-    return ctx.hydrator.hydrateProfilesDetailed(
+    return ctx.hydrator.hydrateMerchants(
       [skeleton.did],
       params.hydrateCtx.copy({ includeTakedowns: true }),
     )
   }
-
   // presentation definition defines a type definition for a view. similar to a dto.
   const presentation = (input: {
     ctx: Context
@@ -43,19 +42,11 @@ export default function (server: Server, ctx: AppContext) {
     skeleton: SkeletonState
     hydration: HydrationState
   }) => {
-    const { ctx, params, skeleton, hydration } = input
-    const profile = ctx.views.profileDetailed(skeleton.did, hydration)
+    const { ctx, skeleton, hydration } = input
+    const profile = ctx.views.merchant(skeleton.did, hydration)
     if (!profile) {
       throw new InvalidRequestError('Profile not found')
-    } else if (
-      !params.hydrateCtx.includeTakedowns &&
-      ctx.views.actorIsTakendown(skeleton.did, hydration)
-    ) {
-      throw new InvalidRequestError(
-        'Account has been suspended',
-        'AccountTakedown',
-      )
-    }
+    } 
     return profile
   }
 

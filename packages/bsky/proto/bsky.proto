@@ -313,6 +313,33 @@ message GetActorsResponse {
   repeated ActorInfo actors = 1;
 }
 
+
+//
+// Merchant Profile
+//
+
+// - return merchant information for dids A, B, C…
+//     - profile hydration
+//     - should this include handles?  apply repo takedown?
+message GetMerchantsRequest {
+  repeated string dids = 1;
+}
+
+message MerchantInfo {
+  bool exists = 1;
+  string handle = 2;
+  Record profile = 3;
+  bool taken_down = 4;
+  string takedown_ref = 5;
+  google.protobuf.Timestamp tombstoned_at = 6;
+  bool labeler = 7;
+}
+
+message GetMerchantsResponse {
+  repeated MerchantInfo merchants = 1;
+}
+
+
 // - return did for handle A
 //     - `resolveHandle`
 //     - answering queries where the query param is a handle
@@ -911,7 +938,6 @@ message GetBlobTakedownResponse {
 }
 
 
-
 message GetActorTakedownRequest {
   string did = 1;
 }
@@ -980,6 +1006,9 @@ service Service {
   rpc GetActors(GetActorsRequest) returns (GetActorsResponse);
   rpc GetDidsByHandles(GetDidsByHandlesRequest) returns (GetDidsByHandlesResponse);
 
+  // Merchant Profile
+  rpc GetMerchants(GetMerchantsRequest) returns (GetMerchantsResponse);
+    
   // Relationships
   rpc GetRelationships(GetRelationshipsRequest) returns (GetRelationshipsResponse);
   rpc GetBlockExistence(GetBlockExistenceRequest) returns (GetBlockExistenceResponse);

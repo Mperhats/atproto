@@ -15,6 +15,10 @@ import {
   ProfileViewerState,
 } from './actor'
 import {
+  MerchantHydrator,
+  Merchants,
+} from './merchant'
+import {
   Follows,
   GraphHydrator,
   ListItems,
@@ -72,6 +76,7 @@ export type HydrateCtxVals = {
 export type HydrationState = {
   ctx?: HydrateCtx
   actors?: Actors
+  merchants?:Merchants
   profileViewers?: ProfileViewerStates
   profileAggs?: ProfileAggs
   posts?: Posts
@@ -103,6 +108,7 @@ export type FollowBlock = boolean
 export type FollowBlocks = HydrationMap<FollowBlock>
 
 export class Hydrator {
+  merchant: MerchantHydrator
   actor: ActorHydrator
   feed: FeedHydrator
   graph: GraphHydrator
@@ -113,12 +119,63 @@ export class Hydrator {
     public dataplane: DataPlaneClient,
     serviceLabelers: string[] = [],
   ) {
+    this.merchant = new MerchantHydrator(dataplane)
     this.actor = new ActorHydrator(dataplane)
     this.feed = new FeedHydrator(dataplane)
     this.graph = new GraphHydrator(dataplane)
     this.label = new LabelHydrator(dataplane)
     this.serviceLabelers = new Set(serviceLabelers)
   }
+
+    // app.bsky.merchant.defs#merchantView
+  // - profile viewer
+  //   - list basic
+  // Note: builds on the naive profile viewer hydrator and removes references to lists that have been deleted
+  async hydrateMerchantViewers(
+    dids: string[],
+    ctx: HydrateCtx,
+  ): Promise<HydrationState> {
+    const viewer = ctx.viewer
+    if (!viewer) return {}
+    const profileViewers = await this.merchant.getProfileViewerStatesNaive(
+      dids,
+      viewer,
+    )
+    const listUris: string[] = []
+    profileViewers?.forEach((item) => {
+      listUris.push(...listUrisFromProfileViewer(item))
+    })
+    const listState = await this.hydrateListsBasic(listUris, ctx)
+    // if a list no longer exists or is not a mod list, then remove from viewer state
+    profileViewers?.forEach((item) => {
+      removeNonModListsFromProfileViewer(item, listState)
+    })
+    return mergeStates(listState, {
+      profileViewers,
+      ctx,
+    })
+  }
+
+
+  // app.bsky.merchant.defs#merchantView
+  // - profile
+  //   - list basic
+  async hydrateMerchants(
+    dids: string[],
+    ctx: HydrateCtx,
+  ): Promise<HydrationState> {
+    const [merchants, labels, profileViewersState] = await Promise.all([
+      this.merchant.getMerchants(dids),
+      this.label.getLabelsForSubjects(labelSubjectsForDid(dids), ctx.labelers),
+      this.hydrateMerchantViewers(dids, ctx),
+    ])
+    return mergeStates(profileViewersState ?? {}, {
+      merchants,
+      labels,
+      ctx,
+    })
+  }
+
 
   // app.bsky.actor.defs#profileView
   // - profile viewer
@@ -199,6 +256,8 @@ export class Hydrator {
       profileAggs,
     }
   }
+
+
 
   // app.bsky.graph.defs#listView
   // - list
@@ -794,6 +853,7 @@ export const mergeStates = (
   return {
     ctx: stateA.ctx ?? stateB.ctx,
     actors: mergeMaps(stateA.actors, stateB.actors),
+    merchants: mergeMaps(stateA.merchants, stateB.merchants),
     profileAggs: mergeMaps(stateA.profileAggs, stateB.profileAggs),
     profileViewers: mergeMaps(stateA.profileViewers, stateB.profileViewers),
     posts: mergeMaps(stateA.posts, stateB.posts),

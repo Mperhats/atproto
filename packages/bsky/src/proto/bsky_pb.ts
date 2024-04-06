@@ -2354,6 +2354,157 @@ export class GetActorsResponse extends Message<GetActorsResponse> {
 }
 
 /**
+ * - return merchant information for dids A, B, C…
+ *     - profile hydration
+ *     - should this include handles?  apply repo takedown?
+ *
+ * @generated from message bsky.GetMerchantsRequest
+ */
+export class GetMerchantsRequest extends Message<GetMerchantsRequest> {
+  /**
+   * @generated from field: repeated string dids = 1;
+   */
+  dids: string[] = [];
+
+  constructor(data?: PartialMessage<GetMerchantsRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "bsky.GetMerchantsRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "dids", kind: "scalar", T: 9 /* ScalarType.STRING */, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetMerchantsRequest {
+    return new GetMerchantsRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetMerchantsRequest {
+    return new GetMerchantsRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetMerchantsRequest {
+    return new GetMerchantsRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetMerchantsRequest | PlainMessage<GetMerchantsRequest> | undefined, b: GetMerchantsRequest | PlainMessage<GetMerchantsRequest> | undefined): boolean {
+    return proto3.util.equals(GetMerchantsRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message bsky.MerchantInfo
+ */
+export class MerchantInfo extends Message<MerchantInfo> {
+  /**
+   * @generated from field: bool exists = 1;
+   */
+  exists = false;
+
+  /**
+   * @generated from field: string handle = 2;
+   */
+  handle = "";
+
+  /**
+   * @generated from field: bsky.Record profile = 3;
+   */
+  profile?: Record;
+
+  /**
+   * @generated from field: bool taken_down = 4;
+   */
+  takenDown = false;
+
+  /**
+   * @generated from field: string takedown_ref = 5;
+   */
+  takedownRef = "";
+
+  /**
+   * @generated from field: google.protobuf.Timestamp tombstoned_at = 6;
+   */
+  tombstonedAt?: Timestamp;
+
+  /**
+   * @generated from field: bool labeler = 7;
+   */
+  labeler = false;
+
+  constructor(data?: PartialMessage<MerchantInfo>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "bsky.MerchantInfo";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "exists", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
+    { no: 2, name: "handle", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "profile", kind: "message", T: Record },
+    { no: 4, name: "taken_down", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
+    { no: 5, name: "takedown_ref", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 6, name: "tombstoned_at", kind: "message", T: Timestamp },
+    { no: 7, name: "labeler", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): MerchantInfo {
+    return new MerchantInfo().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): MerchantInfo {
+    return new MerchantInfo().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): MerchantInfo {
+    return new MerchantInfo().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: MerchantInfo | PlainMessage<MerchantInfo> | undefined, b: MerchantInfo | PlainMessage<MerchantInfo> | undefined): boolean {
+    return proto3.util.equals(MerchantInfo, a, b);
+  }
+}
+
+/**
+ * @generated from message bsky.GetMerchantsResponse
+ */
+export class GetMerchantsResponse extends Message<GetMerchantsResponse> {
+  /**
+   * @generated from field: repeated bsky.MerchantInfo merchants = 1;
+   */
+  merchants: MerchantInfo[] = [];
+
+  constructor(data?: PartialMessage<GetMerchantsResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "bsky.GetMerchantsResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "merchants", kind: "message", T: MerchantInfo, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetMerchantsResponse {
+    return new GetMerchantsResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetMerchantsResponse {
+    return new GetMerchantsResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetMerchantsResponse {
+    return new GetMerchantsResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetMerchantsResponse | PlainMessage<GetMerchantsResponse> | undefined, b: GetMerchantsResponse | PlainMessage<GetMerchantsResponse> | undefined): boolean {
+    return proto3.util.equals(GetMerchantsResponse, a, b);
+  }
+}
+
+/**
  * - return did for handle A
  *     - `resolveHandle`
  *     - answering queries where the query param is a handle

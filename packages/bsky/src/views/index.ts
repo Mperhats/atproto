@@ -53,9 +53,63 @@ import {
   LabelerViewDetailed,
 } from '../lexicon/types/app/bsky/labeler/defs'
 import { Notification } from '../proto/bsky_pb'
+import { MerchantView } from '../lexicon/types/app/bsky/merchant/defs'
 
 export class Views {
   constructor(public imgUriBuilder: ImageUriBuilder) {}
+
+  // Merchant
+  // -----------
+
+  merchant(did: string, state: HydrationState): MerchantView | undefined {
+    const merchant = state.merchants?.get(did)
+    if (!merchant) return
+    const basicView = this.merchantBasic(did, state)
+    if (!basicView) return
+    return {
+      ...basicView,
+      description: merchant.profile?.description || undefined,
+      indexedAt: merchant.sortedAt?.toISOString(),
+    }
+  }
+
+  merchantBasic(
+    did: string,
+    state: HydrationState,
+  ): MerchantView | undefined {
+    const merchant = state.merchants?.get(did)
+    if (!merchant) return
+    const profileUri = AtUri.make(
+      did,
+      ids.AppBskyMerchantProfile,
+      'self',
+    ).toString()
+    const labels = [
+      ...(state.labels?.getBySubject(did) ?? []),
+      ...(state.labels?.getBySubject(profileUri) ?? []),
+      ...this.selfLabels({
+        uri: profileUri,
+        cid: merchant.profileCid?.toString(),
+        record: merchant.profile,
+      }),
+    ]
+    return {
+      did,
+      handle: merchant.handle ?? INVALID_HANDLE,
+      displayName: merchant.profile?.displayName,
+      avatar: merchant.profile?.avatar
+        ? this.imgUriBuilder.getPresetUri(
+            'avatar',
+            did,
+            cidFromBlobJson(merchant.profile.avatar),
+          )
+        : undefined,
+      // associated.feedgens and associated.lists info not necessarily included
+      // on profile and profile-basic views, but should be on profile-detailed.
+      associated: merchant?.isLabeler ? { labeler: true } : undefined,
+      labels,
+    }
+  }
 
   // Actor
   // ------------
