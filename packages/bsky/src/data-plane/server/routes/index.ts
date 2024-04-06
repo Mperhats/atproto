@@ -15,6 +15,7 @@ import mutes from './mutes'
 import notifs from './notifs'
 import posts from './posts'
 import profile from './profile'
+import merchant from './merchant'
 import records from './records'
 import relationships from './relationships'
 import reposts from './reposts'
@@ -27,6 +28,7 @@ import { Database } from '../db'
 export default (db: Database, idResolver: IdResolver) =>
   (router: ConnectRouter) =>
     router.service(Service, {
+      ...merchant(db),
       ...blocks(db),
       ...feedGens(db),
       ...feeds(db),

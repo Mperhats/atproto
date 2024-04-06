@@ -90,6 +90,7 @@ export class MerchantHydrator {
   ): Promise<Merchants> {
     if (!dids.length) return new HydrationMap<Merchant>()
     const res = await this.dataplane.getMerchants({ dids })
+    console.log(res)
     return dids.reduce((acc, did, i) => {
       const merchant = res.merchants[i]
       if (

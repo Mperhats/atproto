@@ -46,6 +46,7 @@ export default function (server: Server, ctx: AppContext) {
   }) => {
     const { ctx, skeleton, hydration } = input
     const profile = ctx.views.merchant(skeleton.did, hydration)
+
     if (!profile) {
       throw new InvalidRequestError('Profile not found')
     }
@@ -67,8 +68,6 @@ export default function (server: Server, ctx: AppContext) {
   server.app.bsky.merchant.getMerchant({
     auth: ctx.authVerifier.optionalStandardOrRole,
     handler: async ({ auth, params, req }) => {
-      console.info('I have not a fucking clue what is happening.')
-
       const { viewer, includeTakedowns } = ctx.authVerifier.parseCreds(auth)
       const labelers = ctx.reqLabelers(req)
       const hydrateCtx = await ctx.hydrator.createContext({
@@ -77,11 +76,8 @@ export default function (server: Server, ctx: AppContext) {
         includeTakedowns,
       })
 
-      try{
         const result = await getMerchant({ ...params, hydrateCtx }, ctx)
-
         const repoRev = await ctx.hydrator.merchant.getRepoRevSafe(viewer)
-  
         return {
           encoding: 'application/json',
           body: result,
@@ -90,11 +86,6 @@ export default function (server: Server, ctx: AppContext) {
             labelers: hydrateCtx.labelers,
           }),
         }
-  
-      }catch(error){
-        console.info(error)
-        throw new InvalidRequestError('fuck you')
-      }
     },
   })
 }
