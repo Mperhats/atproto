@@ -51,7 +51,6 @@ export class TestPds {
     const secrets = pds.envToSecrets(env)
 
     const server = await pds.PDS.create(cfg, secrets)
-
     await server.start()
 
     return new TestPds(url, port, server)

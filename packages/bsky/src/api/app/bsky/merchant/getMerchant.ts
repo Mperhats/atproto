@@ -10,14 +10,15 @@ import {
   Hydrator,
 } from '../../../../hydration/hydrator'
 import { Views } from '../../../../views'
+import { httpLogger } from '../../../../logger'
 
 export default function (server: Server, ctx: AppContext) {
   const skeleton = async (input: {
     ctx: Context
     params: Params
   }): Promise<SkeletonState> => {
+
     const { ctx, params } = input
-    console.log('parse my ass@!!!!')
     const [did] = await ctx.hydrator.merchant.getDids([params.merchant])
     if (!did) {
       throw new InvalidRequestError('Profile not found')
@@ -66,6 +67,8 @@ export default function (server: Server, ctx: AppContext) {
   server.app.bsky.merchant.getMerchant({
     auth: ctx.authVerifier.optionalStandardOrRole,
     handler: async ({ auth, params, req }) => {
+      console.info('I have not a fucking clue what is happening.')
+
       const { viewer, includeTakedowns } = ctx.authVerifier.parseCreds(auth)
       const labelers = ctx.reqLabelers(req)
       const hydrateCtx = await ctx.hydrator.createContext({
@@ -74,17 +77,23 @@ export default function (server: Server, ctx: AppContext) {
         includeTakedowns,
       })
 
-      const result = await getMerchant({ ...params, hydrateCtx }, ctx)
+      try{
+        const result = await getMerchant({ ...params, hydrateCtx }, ctx)
 
-      const repoRev = await ctx.hydrator.merchant.getRepoRevSafe(viewer)
-
-      return {
-        encoding: 'application/json',
-        body: result,
-        headers: resHeaders({
-          repoRev,
-          labelers: hydrateCtx.labelers,
-        }),
+        const repoRev = await ctx.hydrator.merchant.getRepoRevSafe(viewer)
+  
+        return {
+          encoding: 'application/json',
+          body: result,
+          headers: resHeaders({
+            repoRev,
+            labelers: hydrateCtx.labelers,
+          }),
+        }
+  
+      }catch(error){
+        console.info(error)
+        throw new InvalidRequestError('fuck you')
       }
     },
   })

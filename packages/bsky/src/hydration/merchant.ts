@@ -91,27 +91,27 @@ export class MerchantHydrator {
     if (!dids.length) return new HydrationMap<Merchant>()
     const res = await this.dataplane.getMerchants({ dids })
     return dids.reduce((acc, did, i) => {
-      const actor = res.merchants[i]
+      const merchant = res.merchants[i]
       if (
-        !actor.exists ||
-        (actor.takenDown && !includeTakedowns) ||
-        !!actor.tombstonedAt
+        !merchant.exists ||
+        (merchant.takenDown && !includeTakedowns) ||
+        !!merchant.tombstonedAt
       ) {
         return acc.set(did, null)
       }
       const profile =
-        includeTakedowns || !actor.profile?.takenDown
-          ? actor.profile
+        includeTakedowns || !merchant.profile?.takenDown
+          ? merchant.profile
           : undefined
       return acc.set(did, {
         did,
-        handle: parseString(actor.handle),
+        handle: parseString(merchant.handle),
         merchantProfile: parseRecordBytes<MerchantProfileRecord>(profile?.record),
         profileCid: profile?.cid,
         profileTakedownRef: safeTakedownRef(profile),
         sortedAt: profile?.sortedAt?.toDate(),
-        takedownRef: safeTakedownRef(actor),
-        isLabeler: actor.labeler ?? false,
+        takedownRef: safeTakedownRef(merchant),
+        isLabeler: merchant.labeler ?? false,
       })
     }, new HydrationMap<Merchant>())
   }

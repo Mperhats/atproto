@@ -25,7 +25,7 @@ run: ## Run a "development environment" shell
 .PHONY: rerun
 rerun: ## Compile all modules and run a "development environment" shell
 	pnpm build
-	cd packages/dev-env; pnpm run start
+	LOG_ENABLED=true cd packages/dev-env; pnpm run start | pnpm exec pino-pretty
 
 .PHONY: run-logged
 run-logged: ## Run a "development environment" shell (with logging)

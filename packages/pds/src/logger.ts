@@ -3,6 +3,7 @@ import pinoHttp from 'pino-http'
 import { subsystemLogger } from '@atproto/common'
 import * as jose from 'jose'
 import { parseBasicAuth } from './auth-verifier'
+import { logger } from 'handlebars'
 
 export const dbLogger = subsystemLogger('pds:db')
 export const didCacheLogger = subsystemLogger('pds:did-cache')
