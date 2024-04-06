@@ -20,6 +20,16 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .execute()
 
   await db.schema
+    .alterTable('merchant')
+    .dropConstraint('merchant_takedown_id_fkey')
+    .execute()
+  await db.schema.alterTable('merchant').dropColumn('takedownId').execute()
+  await db.schema
+    .alterTable('merchant')
+    .addColumn('takedownRef', 'varchar')
+    .execute()
+
+  await db.schema
     .alterTable('record')
     .dropConstraint('record_takedown_id_fkey')
     .execute()
@@ -43,6 +53,22 @@ export async function down(db: Kysely<unknown>): Promise<void> {
     .alterTable('actor')
     .addForeignKeyConstraint(
       'actor_takedown_id_fkey',
+      ['takedownId'],
+      'moderation_event',
+      ['id'],
+    )
+    .execute()
+
+  await db.schema.alterTable('merchant').dropColumn('takedownRef').execute()
+  await db.schema
+    .alterTable('merchant')
+    .addColumn('takedownId', 'integer')
+    .execute()
+
+  await db.schema
+    .alterTable('merchant')
+    .addForeignKeyConstraint(
+      'merchant_takedown_id_fkey',
       ['takedownId'],
       'moderation_event',
       ['id'],

@@ -99,7 +99,12 @@ export class MerchantStore {
     const db = await this.openDb(did)
     try {
       return await db.transaction((dbTxn) => {
-        const store = createMerchantTransactor(did, dbTxn, keypair, this.resources)
+        const store = createMerchantTransactor(
+          did,
+          dbTxn,
+          keypair,
+          this.resources,
+        )
         return fn(store)
       })
     } finally {
@@ -268,7 +273,9 @@ const createMerchantReader = (
 }
 
 export type MerchantStoreReadFn<T> = (fn: MerchantStoreReader) => Promise<T>
-export type MerchantStoreTransactFn<T> = (fn: MerchantStoreTransactor) => Promise<T>
+export type MerchantStoreTransactFn<T> = (
+  fn: MerchantStoreTransactor,
+) => Promise<T>
 export type MerchantStoreWriterFn<T> = (fn: MerchantStoreWriter) => Promise<T>
 
 export type MerchantStoreReader = {

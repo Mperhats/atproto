@@ -145,6 +145,7 @@ import * as AppBskyLabelerGetServices from './types/app/bsky/labeler/getServices
 import * as AppBskyLabelerService from './types/app/bsky/labeler/service'
 import * as AppBskyMerchantDefs from './types/app/bsky/merchant/defs'
 import * as AppBskyMerchantGetMerchant from './types/app/bsky/merchant/getMerchant'
+import * as AppBskyMerchantProfile from './types/app/bsky/merchant/profile'
 import * as AppBskyNotificationGetUnreadCount from './types/app/bsky/notification/getUnreadCount'
 import * as AppBskyNotificationListNotifications from './types/app/bsky/notification/listNotifications'
 import * as AppBskyNotificationRegisterPush from './types/app/bsky/notification/registerPush'
@@ -307,6 +308,7 @@ export * as AppBskyLabelerGetServices from './types/app/bsky/labeler/getServices
 export * as AppBskyLabelerService from './types/app/bsky/labeler/service'
 export * as AppBskyMerchantDefs from './types/app/bsky/merchant/defs'
 export * as AppBskyMerchantGetMerchant from './types/app/bsky/merchant/getMerchant'
+export * as AppBskyMerchantProfile from './types/app/bsky/merchant/profile'
 export * as AppBskyNotificationGetUnreadCount from './types/app/bsky/notification/getUnreadCount'
 export * as AppBskyNotificationListNotifications from './types/app/bsky/notification/listNotifications'
 export * as AppBskyNotificationRegisterPush from './types/app/bsky/notification/registerPush'
@@ -2546,9 +2548,11 @@ export class ServiceRecord {
 
 export class AppBskyMerchantNS {
   _service: AtpServiceClient
+  profile: ProfileRecord
 
   constructor(service: AtpServiceClient) {
     this._service = service
+    this.profile = new ProfileRecord(service)
   }
 
   getMerchant(
@@ -2560,6 +2564,76 @@ export class AppBskyMerchantNS {
       .catch((e) => {
         throw AppBskyMerchantGetMerchant.toKnownErr(e)
       })
+  }
+}
+
+export class ProfileRecord {
+  _service: AtpServiceClient
+
+  constructor(service: AtpServiceClient) {
+    this._service = service
+  }
+
+  async list(
+    params: Omit<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
+  ): Promise<{
+    cursor?: string
+    records: { uri: string; value: AppBskyMerchantProfile.Record }[]
+  }> {
+    const res = await this._service.xrpc.call('com.atproto.repo.listRecords', {
+      collection: 'app.bsky.merchant.profile',
+      ...params,
+    })
+    return res.data
+  }
+
+  async get(
+    params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
+  ): Promise<{
+    uri: string
+    cid: string
+    value: AppBskyMerchantProfile.Record
+  }> {
+    const res = await this._service.xrpc.call('com.atproto.repo.getRecord', {
+      collection: 'app.bsky.merchant.profile',
+      ...params,
+    })
+    return res.data
+  }
+
+  async create(
+    params: Omit<
+      ComAtprotoRepoCreateRecord.InputSchema,
+      'collection' | 'record'
+    >,
+    record: AppBskyMerchantProfile.Record,
+    headers?: Record<string, string>,
+  ): Promise<{ uri: string; cid: string }> {
+    record.$type = 'app.bsky.merchant.profile'
+    const res = await this._service.xrpc.call(
+      'com.atproto.repo.createRecord',
+      undefined,
+      {
+        collection: 'app.bsky.merchant.profile',
+        rkey: 'self',
+        ...params,
+        record,
+      },
+      { encoding: 'application/json', headers },
+    )
+    return res.data
+  }
+
+  async delete(
+    params: Omit<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
+    headers?: Record<string, string>,
+  ): Promise<void> {
+    await this._service.xrpc.call(
+      'com.atproto.repo.deleteRecord',
+      undefined,
+      { collection: 'app.bsky.merchant.profile', ...params },
+      { headers },
+    )
   }
 }
 

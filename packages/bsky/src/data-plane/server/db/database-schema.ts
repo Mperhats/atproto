@@ -21,6 +21,9 @@ import * as subscription from './tables/subscription'
 import * as actor from './tables/actor'
 import * as actorState from './tables/actor-state'
 import * as actorSync from './tables/actor-sync'
+import * as merchant from './tables/merchant'
+import * as merchantState from './tables/merchant-state'
+import * as merchantSync from './tables/merchant-sync'
 import * as record from './tables/record'
 import * as notification from './tables/notification'
 import * as notificationPushToken from './tables/notification-push-token'
@@ -56,6 +59,9 @@ export type DatabaseSchemaType = duplicateRecord.PartialDB &
   actor.PartialDB &
   actorState.PartialDB &
   actorSync.PartialDB &
+  merchant.PartialDB &
+  merchantState.PartialDB &
+  merchantSync.PartialDB &
   record.PartialDB &
   notification.PartialDB &
   notificationPushToken.PartialDB &

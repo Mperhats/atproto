@@ -37,10 +37,10 @@ export default function (server: Server, ctx: AppContext) {
 
       let didDoc: DidDocument | undefined
       let creds: { accessJwt: string; refreshJwt: string }
-      await ctx.actorStore.create(did, signingKey)
+      await ctx.merchantStore.create(did, signingKey)
       try {
-        const commit = await ctx.actorStore.transact(did, (actorTxn) =>
-          actorTxn.repo.createRepo([]),
+        const commit = await ctx.merchantStore.transact(did, (merchantTxn) =>
+          merchantTxn.repo.createRepo([]),
         )
 
         // Generate a real did with PLC
@@ -73,10 +73,10 @@ export default function (server: Server, ctx: AppContext) {
         }
         await ctx.accountManager.updateRepoRoot(did, commit.cid, commit.rev)
         didDoc = await didDocForSession(ctx, did, true)
-        await ctx.actorStore.clearReservedKeypair(signingKey.did(), did)
+        await ctx.merchantStore.clearReservedKeypair(signingKey.did(), did)
       } catch (err) {
-        // this will only be reached if the actor store _did not_ exist before
-        await ctx.actorStore.destroy(did)
+        // this will only be reached if the merchant store _did not_ exist before
+        await ctx.merchantStore.destroy(did)
         throw err
       }
 
@@ -126,10 +126,10 @@ const validateInputsForEntrywayPds = async (
 
   let signingKey: ExportableKeypair | undefined
   if (input.did) {
-    signingKey = await ctx.actorStore.getReservedKeypair(input.did)
+    signingKey = await ctx.merchantStore.getReservedKeypair(input.did)
   }
   if (!signingKey) {
-    signingKey = await ctx.actorStore.getReservedKeypair(data.signingKey)
+    signingKey = await ctx.merchantStore.getReservedKeypair(data.signingKey)
   }
   if (!signingKey) {
     throw new InvalidRequestError('reserved signing key does not exist')

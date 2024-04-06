@@ -5,5 +5,5 @@ import * as mig003 from './003-merchant-deactivation'
 export default {
   '001': mig001,
   '002': mig002,
-  '003': mig003
+  '003': mig003,
 }

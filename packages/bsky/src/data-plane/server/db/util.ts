@@ -19,6 +19,15 @@ export const actorWhereClause = (actor: string) => {
   }
 }
 
+
+export const merchantWhereClause = (actor: string) => {
+  if (actor.startsWith('did:')) {
+    return sql<0 | 1>`"actor"."did" = ${actor}`
+  } else {
+    return sql<0 | 1>`"actor"."handle" = ${actor}`
+  }
+}
+
 // Applies to actor or record table
 export const notSoftDeletedClause = (alias: DbRef) => {
   return sql`${alias}."takedownRef" is null`

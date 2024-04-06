@@ -108,6 +108,17 @@ export async function up(db: Kysely<unknown>): Promise<void> {
       ['id'],
     )
     .execute()
+
+    // foreign keys
+  await db.schema
+  .alterTable('merchant')
+  .addForeignKeyConstraint(
+    'merchant_takedown_id_fkey',
+    ['takedownId'],
+    'moderation_action',
+    ['id'],
+  )
+  .execute()
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
@@ -118,6 +129,10 @@ export async function down(db: Kysely<unknown>): Promise<void> {
   await db.schema
     .alterTable('actor')
     .dropConstraint('actor_takedown_id_fkey')
+    .execute()
+  await db.schema
+    .alterTable('merchant')
+    .dropConstraint('merchant_takedown_id_fkey')
     .execute()
   await db.schema.dropTable('label').execute()
   await db.schema.dropTable('moderation_report_resolution').execute()

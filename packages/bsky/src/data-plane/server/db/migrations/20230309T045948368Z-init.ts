@@ -261,6 +261,32 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('tooBigCount', 'integer', (col) => col.notNull())
     .execute()
 
+  // merchant
+  await db.schema
+    .createTable('merchant')
+    .addColumn('did', 'varchar', (col) => col.primaryKey())
+    .addColumn('handle', 'varchar', (col) => col.unique())
+    .addColumn('indexedAt', 'varchar', (col) => col.notNull())
+    .addColumn('takedownId', 'integer') // foreign key created in moderation-init migration
+    .execute()
+  await db.schema // Supports merchant search
+    .createIndex(`merchant_handle_tgrm_idx`)
+    .on('merchant')
+    .using('gist')
+    .expression(sql`"handle" gist_trgm_ops`)
+    .execute()
+
+  // merchant sync state
+  await db.schema
+    .createTable('merchant_sync')
+    .addColumn('did', 'varchar', (col) => col.primaryKey())
+    .addColumn('commitCid', 'varchar', (col) => col.notNull())
+    .addColumn('commitDataCid', 'varchar', (col) => col.notNull())
+    .addColumn('rebaseCount', 'integer', (col) => col.notNull())
+    .addColumn('tooBigCount', 'integer', (col) => col.notNull())
+    .execute()
+
+
   //record
   await db.schema
     .createTable('record')
@@ -278,6 +304,8 @@ export async function down(db: Kysely<unknown>): Promise<void> {
   await db.schema.dropTable('record').execute()
   // actor
   await db.schema.dropTable('actor').execute()
+  // merchant
+  await db.schema.dropTable('merchant').execute()
   // subscription
   await db.schema.dropTable('subscription').execute()
   // like
