@@ -18,7 +18,7 @@ export type Merchant = {
   isLabeler: boolean
 }
 
-export type Actors = HydrationMap<Merchant>
+export type Merchants = HydrationMap<Merchant>
 
 export type ProfileViewerState = {
   muted?: boolean
@@ -82,7 +82,10 @@ export class ActorHydrator {
     return res.filter((did) => did !== undefined)
   }
 
-  async getActors(dids: string[], includeTakedowns = false): Promise<Actors> {
+  async getMerchants(
+    dids: string[],
+    includeTakedowns = false,
+  ): Promise<Merchants> {
     if (!dids.length) return new HydrationMap<Merchant>()
     const res = await this.dataplane.getActors({ dids })
     return dids.reduce((acc, did, i) => {

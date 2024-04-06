@@ -109,16 +109,16 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     )
     .execute()
 
-    // foreign keys
+  // foreign keys
   await db.schema
-  .alterTable('merchant')
-  .addForeignKeyConstraint(
-    'merchant_takedown_id_fkey',
-    ['takedownId'],
-    'moderation_action',
-    ['id'],
-  )
-  .execute()
+    .alterTable('merchant')
+    .addForeignKeyConstraint(
+      'merchant_takedown_id_fkey',
+      ['takedownId'],
+      'moderation_action',
+      ['id'],
+    )
+    .execute()
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {

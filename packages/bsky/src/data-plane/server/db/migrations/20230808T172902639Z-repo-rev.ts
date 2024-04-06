@@ -15,4 +15,3 @@ export async function down(db: Kysely<unknown>): Promise<void> {
   await db.schema.alterTable('actor_sync').dropColumn('repoRev').execute()
   await db.schema.alterTable('merchant_sync').dropColumn('repoRev').execute()
 }
-

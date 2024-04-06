@@ -19,7 +19,6 @@ export const actorWhereClause = (actor: string) => {
   }
 }
 
-
 export const merchantWhereClause = (actor: string) => {
   if (actor.startsWith('did:')) {
     return sql<0 | 1>`"actor"."did" = ${actor}`

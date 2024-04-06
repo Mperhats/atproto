@@ -286,7 +286,6 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('tooBigCount', 'integer', (col) => col.notNull())
     .execute()
 
-
   //record
   await db.schema
     .createTable('record')

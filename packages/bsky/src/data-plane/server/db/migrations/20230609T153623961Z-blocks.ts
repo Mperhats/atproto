@@ -26,7 +26,6 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .column('subjectDid')
     .execute()
 
-  
   await db.schema
     .createTable('merchant_block')
     .addColumn('uri', 'varchar', (col) => col.primaryKey())
