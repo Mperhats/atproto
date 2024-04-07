@@ -115,8 +115,11 @@ export class IndexingService {
     if (!force && !needsHandleReindex(actor, timestamp)) {
       return
     }
+
     const atpData = await this.idResolver.did.resolveAtprotoData(did, true)
     const handleToDid = await this.idResolver.handle.resolve(atpData.handle)
+
+    console.log('atpData on identity event:',atpData) 
 
     const handle: string | null =
       did === handleToDid ? atpData.handle.toLowerCase() : null

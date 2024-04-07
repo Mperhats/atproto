@@ -81,7 +81,6 @@ export class RepoSubscription {
         )
         continue
       }
-      console.log('new message received....')
       const item = this.consecutive.push(details.seq)
       this.repoQueue.add(details.repo, async () => {
         await this.handleMessage(item, details)
@@ -127,6 +126,8 @@ export class RepoSubscription {
   }
 
   private async handleCommit(msg: message.Commit) {
+    console.log('Commit event', msg);
+
     const indexRecords = async () => {
       const { root, rootCid, ops } = await getOps(msg)
       if (msg.tooBig) {
@@ -134,7 +135,7 @@ export class RepoSubscription {
         await this.indexingSvc.setCommitLastSeen(root, msg)
         return
       }
-      if (msg.rebase) {
+      if (msg.rebase) { // DEPRECATED: currently unused.
         const needsReindex =
           await this.indexingSvc.checkCommitNeedsIndexing(root)
         if (needsReindex) {
@@ -191,10 +192,12 @@ export class RepoSubscription {
   }
 
   private async handleUpdateHandle(msg: message.Handle) {
+    console.log('Update handle event', msg)
     await this.indexingSvc.indexHandle(msg.did, msg.time, true)
   }
 
   private async handleIdentityEvt(msg: message.Identity) {
+    console.log('Identity event', msg)
     await this.indexingSvc.indexHandle(msg.did, msg.time, true)
   }
 
