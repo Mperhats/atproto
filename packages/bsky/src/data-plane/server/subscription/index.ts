@@ -126,7 +126,7 @@ export class RepoSubscription {
   }
 
   private async handleCommit(msg: message.Commit) {
-    console.log('Commit event', msg);
+    console.log('Commit event', msg)
 
     const indexRecords = async () => {
       const { root, rootCid, ops } = await getOps(msg)
@@ -135,7 +135,8 @@ export class RepoSubscription {
         await this.indexingSvc.setCommitLastSeen(root, msg)
         return
       }
-      if (msg.rebase) { // DEPRECATED: currently unused.
+      if (msg.rebase) {
+        // DEPRECATED: currently unused.
         const needsReindex =
           await this.indexingSvc.checkCommitNeedsIndexing(root)
         if (needsReindex) {

@@ -30,7 +30,9 @@ const selectMerchantAccountQB = (db: AccountDb, flags?: AvailabilityFlags) => {
   return db.db
     .selectFrom('merchant')
     .leftJoin('account', 'merchant.did', 'account.did')
-    .if(!includeTakenDown, (qb) => qb.where(notSoftDeletedClause(ref('merchant'))))
+    .if(!includeTakenDown, (qb) =>
+      qb.where(notSoftDeletedClause(ref('merchant'))),
+    )
     .if(!includeDeactivated, (qb) =>
       qb.where('merchant.deactivatedAt', 'is', null),
     )
@@ -47,7 +49,7 @@ const selectMerchantAccountQB = (db: AccountDb, flags?: AvailabilityFlags) => {
     ])
 }
 
-async function logFirstFourRowsOfMerchants(db:AccountDb) {
+async function logFirstFourRowsOfMerchants(db: AccountDb) {
   const merchantRows = await db.db
     .selectFrom('merchant')
     .selectAll()
@@ -57,11 +59,11 @@ async function logFirstFourRowsOfMerchants(db:AccountDb) {
 }
 
 // Function to log the first four rows of the actor table
-async function logFirstFourRowsOfActors(db:AccountDb) {
+async function logFirstFourRowsOfActors(db: AccountDb) {
   const count = await db.db
-  .selectFrom('actor') // Assuming the 'actor' table is present
-  .select(sql`COUNT(*)`.as('rowCount'))
-  .executeTakeFirst();
+    .selectFrom('actor') // Assuming the 'actor' table is present
+    .select(sql`COUNT(*)`.as('rowCount'))
+    .executeTakeFirst()
   console.log('First 4 rows of Actor table:', count)
 }
 
@@ -107,7 +109,7 @@ export const registerMerchant = async (
   logFirstFourRowsOfActors(db)
   logFirstFourRowsOfMerchants(db)
 
-  console.log('registered new account into merchant db...',registered)
+  console.log('registered new account into merchant db...', registered)
 
   if (!registered) {
     throw new UserAlreadyExistsError()
@@ -130,7 +132,6 @@ export const getMerchantAccount = async (
     .executeTakeFirst()
   return found || null
 }
-
 
 // ACTOR ACCOUNTS
 const selectAccountQB = (db: AccountDb, flags?: AvailabilityFlags) => {
@@ -202,7 +203,7 @@ export const getAccount = async (
   return found || null
 }
 
-// 
+//
 export const getAccountByEmail = async (
   db: AccountDb,
   email: string,

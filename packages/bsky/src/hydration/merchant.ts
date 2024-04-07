@@ -49,7 +49,9 @@ export class MerchantHydrator {
   async getRepoRevSafe(did: string | null): Promise<string | null> {
     if (!did) return null
     try {
-      const res = await this.dataplane.getLatestMerchantRev({ merchantDid: did })
+      const res = await this.dataplane.getLatestMerchantRev({
+        merchantDid: did,
+      })
       return parseString(res.rev) ?? null
     } catch {
       return null
@@ -90,7 +92,7 @@ export class MerchantHydrator {
   ): Promise<Merchants> {
     if (!dids.length) return new HydrationMap<Merchant>()
     const res = await this.dataplane.getMerchants({ dids })
-   
+
     return dids.reduce((acc, did, i) => {
       const merchant = res.merchants[i]
       if (
@@ -107,7 +109,9 @@ export class MerchantHydrator {
       return acc.set(did, {
         did,
         handle: parseString(merchant.handle),
-        merchantProfile: parseRecordBytes<MerchantProfileRecord>(profile?.record),
+        merchantProfile: parseRecordBytes<MerchantProfileRecord>(
+          profile?.record,
+        ),
         profileCid: profile?.cid,
         profileTakedownRef: safeTakedownRef(profile),
         sortedAt: profile?.sortedAt?.toDate(),

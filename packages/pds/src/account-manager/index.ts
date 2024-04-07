@@ -110,8 +110,6 @@ export class AccountManager {
     return { accessJwt, refreshJwt }
   }
 
-
-
   // Actor Account
   // ----------
 

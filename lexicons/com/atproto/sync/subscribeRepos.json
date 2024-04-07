@@ -118,7 +118,11 @@
       "properties": {
         "seq": { "type": "integer" },
         "did": { "type": "string", "format": "did" },
-        "time": { "type": "string", "format": "datetime" }
+        "time": { "type": "string", "format": "datetime" },
+        "actorCategory": {
+          "type": "string",
+          "knownValues": ["actor","merchant"]
+        }
       }
     },
     "handle": {

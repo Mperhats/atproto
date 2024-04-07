@@ -21,9 +21,9 @@ export interface Commit {
   commit: CID
   /** DEPRECATED -- unused. WARNING -- nullable and optional; stick with optional to ensure golang interoperability. */
   prev?: CID | null
-  /** The rev of the emitted commit. Note that this information is also in the commit object included in blocks, unless this is a tooBig event. */
+  /** The revision of the emitted commit. Note that this information is also in the commit object included in blocks, unless this is a tooBig event. */
   rev: string
-  /** The rev of the last emitted commit from this repo (if any). */
+  /** The revision of the last emitted commit from this repo (if any). */
   since: string | null
   /** CAR file containing relevant blocks, as a diff since the previous repo state. */
   blocks: Uint8Array
@@ -51,6 +51,7 @@ export interface Identity {
   seq: number
   did: string
   time: string
+  actorCategory?: 'actor' | 'merchant' | (string & {})
   [k: string]: unknown
 }
 

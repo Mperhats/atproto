@@ -1,5 +1,6 @@
 import { Generated, GeneratedAlways, Insertable, Selectable } from 'kysely'
 
+// TODO: this could be more typesafe from the Lexicon
 export type RepoSeqEventType =
   | 'append'
   | 'rebase'

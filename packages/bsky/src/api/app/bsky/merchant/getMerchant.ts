@@ -16,7 +16,6 @@ export default function (server: Server, ctx: AppContext) {
     ctx: Context
     params: Params
   }): Promise<SkeletonState> => {
-
     const { ctx, params } = input
     const [did] = await ctx.hydrator.merchant.getDids([params.merchant])
     if (!did) {
@@ -75,16 +74,16 @@ export default function (server: Server, ctx: AppContext) {
         includeTakedowns,
       })
 
-        const result = await getMerchant({ ...params, hydrateCtx }, ctx)
-        const repoRev = await ctx.hydrator.merchant.getRepoRevSafe(viewer)
-        return {
-          encoding: 'application/json',
-          body: result,
-          headers: resHeaders({
-            repoRev,
-            labelers: hydrateCtx.labelers,
-          }),
-        }
+      const result = await getMerchant({ ...params, hydrateCtx }, ctx)
+      const repoRev = await ctx.hydrator.merchant.getRepoRevSafe(viewer)
+      return {
+        encoding: 'application/json',
+        body: result,
+        headers: resHeaders({
+          repoRev,
+          labelers: hydrateCtx.labelers,
+        }),
+      }
     },
   })
 }

@@ -3463,12 +3463,12 @@ export const schemaDict = {
           rev: {
             type: 'string',
             description:
-              'The rev of the emitted commit. Note that this information is also in the commit object included in blocks, unless this is a tooBig event.',
+              'The revision of the emitted commit. Note that this information is also in the commit object included in blocks, unless this is a tooBig event.',
           },
           since: {
             type: 'string',
             description:
-              'The rev of the last emitted commit from this repo (if any).',
+              'The revision of the last emitted commit from this repo (if any).',
           },
           blocks: {
             type: 'bytes',
@@ -3518,6 +3518,10 @@ export const schemaDict = {
           time: {
             type: 'string',
             format: 'datetime',
+          },
+          actorCategory: {
+            type: 'string',
+            knownValues: ['actor', 'merchant'],
           },
         },
       },

@@ -12,7 +12,7 @@ export class TestBsync {
   static async create(cfg: BsyncConfig): Promise<TestBsync> {
     const port = cfg.port || (await getPort())
     const url = `http://localhost:${port}`
-    
+
     const config = bsync.envToCfg({
       port,
       apiKeys: cfg.apiKeys ?? ['api-key'],
