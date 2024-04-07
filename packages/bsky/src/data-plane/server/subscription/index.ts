@@ -81,6 +81,7 @@ export class RepoSubscription {
         )
         continue
       }
+      console.log('new message received....')
       const item = this.consecutive.push(details.seq)
       this.repoQueue.add(details.repo, async () => {
         await this.handleMessage(item, details)
