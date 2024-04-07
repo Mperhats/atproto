@@ -112,7 +112,7 @@ export class TestNetwork extends TestNetworkNoAppView {
   }
 
   async serviceHeaders(did: string, aud?: string) {
-    const keypair = await this.pds.ctx.actorStore.keypair(did)
+    const keypair = await this.pds.ctx.merchantStore.keypair(did)
     const jwt = await createServiceJwt({
       iss: did,
       aud: aud ?? this.bsky.ctx.cfg.serverDid,

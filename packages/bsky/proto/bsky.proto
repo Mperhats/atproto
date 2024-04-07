@@ -913,7 +913,7 @@ message GetLabelsResponse {
 }
 
 //
-// Sync
+// Sync Actor
 //
 
 // - Latest repo rev of user w/ DID
@@ -925,6 +925,23 @@ message GetLatestRevRequest {
 message GetLatestRevResponse {
   string rev = 1;
 }
+
+
+//
+// Sync Merchant
+//
+
+// - Latest repo rev of user w/ DID
+//     - Read-after-write header in`getProfile`, `getProfiles`, `getActorLikes`, `getAuthorFeed`, `getListFeed`, `getPostThread`, `getTimeline`.  Could it be view dependent?
+message GetLatestMerchantRevRequest {
+  string merchant_did = 1;
+}
+
+message GetLatestMerchantRevResponse {
+  string rev = 1;
+}
+
+
 
 
 message GetIdentityByDidRequest {
@@ -1104,6 +1121,7 @@ service Service {
 
   // Sync
   rpc GetLatestRev(GetLatestRevRequest) returns (GetLatestRevResponse);
+  rpc GetLatestMerchantRev(GetLatestMerchantRevRequest) returns (GetLatestMerchantRevResponse);
 
   // Moderation
   rpc GetBlobTakedown(GetBlobTakedownRequest) returns (GetBlobTakedownResponse);

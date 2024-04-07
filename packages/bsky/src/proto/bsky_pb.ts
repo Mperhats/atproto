@@ -6289,6 +6289,83 @@ export class GetLatestRevResponse extends Message<GetLatestRevResponse> {
 }
 
 /**
+ * - Latest repo rev of user w/ DID
+ *     - Read-after-write header in`getProfile`, `getProfiles`, `getActorLikes`, `getAuthorFeed`, `getListFeed`, `getPostThread`, `getTimeline`.  Could it be view dependent?
+ *
+ * @generated from message bsky.GetLatestMerchantRevRequest
+ */
+export class GetLatestMerchantRevRequest extends Message<GetLatestMerchantRevRequest> {
+  /**
+   * @generated from field: string merchant_did = 1;
+   */
+  merchantDid = "";
+
+  constructor(data?: PartialMessage<GetLatestMerchantRevRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "bsky.GetLatestMerchantRevRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "merchant_did", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetLatestMerchantRevRequest {
+    return new GetLatestMerchantRevRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetLatestMerchantRevRequest {
+    return new GetLatestMerchantRevRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetLatestMerchantRevRequest {
+    return new GetLatestMerchantRevRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetLatestMerchantRevRequest | PlainMessage<GetLatestMerchantRevRequest> | undefined, b: GetLatestMerchantRevRequest | PlainMessage<GetLatestMerchantRevRequest> | undefined): boolean {
+    return proto3.util.equals(GetLatestMerchantRevRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message bsky.GetLatestMerchantRevResponse
+ */
+export class GetLatestMerchantRevResponse extends Message<GetLatestMerchantRevResponse> {
+  /**
+   * @generated from field: string rev = 1;
+   */
+  rev = "";
+
+  constructor(data?: PartialMessage<GetLatestMerchantRevResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "bsky.GetLatestMerchantRevResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "rev", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetLatestMerchantRevResponse {
+    return new GetLatestMerchantRevResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetLatestMerchantRevResponse {
+    return new GetLatestMerchantRevResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetLatestMerchantRevResponse {
+    return new GetLatestMerchantRevResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetLatestMerchantRevResponse | PlainMessage<GetLatestMerchantRevResponse> | undefined, b: GetLatestMerchantRevResponse | PlainMessage<GetLatestMerchantRevResponse> | undefined): boolean {
+    return proto3.util.equals(GetLatestMerchantRevResponse, a, b);
+  }
+}
+
+/**
  * @generated from message bsky.GetIdentityByDidRequest
  */
 export class GetIdentityByDidRequest extends Message<GetIdentityByDidRequest> {

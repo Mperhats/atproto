@@ -2,6 +2,7 @@ import { Database, isErrUniqueViolation, notSoftDeletedClause } from '../../db'
 import { AccountDb, ActorEntry, MerchantEntry } from '../db'
 import { StatusAttr } from '../../lexicon/types/com/atproto/admin/defs'
 import { DAY } from '@atproto/common'
+import { sql } from 'kysely'
 
 export class UserAlreadyExistsError extends Error {}
 
@@ -55,6 +56,15 @@ async function logFirstFourRowsOfMerchants(db:AccountDb) {
   console.log('First 4 rows of Merchant table:', merchantRows)
 }
 
+// Function to log the first four rows of the actor table
+async function logFirstFourRowsOfActors(db:AccountDb) {
+  const count = await db.db
+  .selectFrom('actor') // Assuming the 'actor' table is present
+  .select(sql`COUNT(*)`.as('rowCount'))
+  .executeTakeFirst();
+  console.log('First 4 rows of Actor table:', count)
+}
+
 export const registerMerchant = async (
   db: AccountDb,
   opts: {
@@ -80,8 +90,25 @@ export const registerMerchant = async (
       .returning('did'),
   )
 
+  const [registeredActor] = await db.executeWithRetry(
+    db.db
+      .insertInto('actor')
+      .values({
+        did,
+        handle,
+        createdAt,
+        deactivatedAt: deactivated ? createdAt : null,
+        deleteAfter: deactivated ? new Date(now + 3 * DAY).toISOString() : null,
+      })
+      .onConflict((oc) => oc.doNothing())
+      .returning('did'),
+  )
+
+  logFirstFourRowsOfActors(db)
   logFirstFourRowsOfMerchants(db)
+
   console.log('registered new account into merchant db...',registered)
+
   if (!registered) {
     throw new UserAlreadyExistsError()
   }

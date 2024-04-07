@@ -49,7 +49,7 @@ export class MerchantHydrator {
   async getRepoRevSafe(did: string | null): Promise<string | null> {
     if (!did) return null
     try {
-      const res = await this.dataplane.getLatestRev({ actorDid: did })
+      const res = await this.dataplane.getLatestMerchantRev({ merchantDid: did })
       return parseString(res.rev) ?? null
     } catch {
       return null
