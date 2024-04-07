@@ -41,7 +41,7 @@ export const dummyDialect = {
   createDriver() {
     return new DummyDriver()
   },
-  createIntrospector(db) {
+  createIntrospector(db: Kysely<any>) {
     return new SqliteIntrospector(db)
   },
   createQueryCompiler() {
