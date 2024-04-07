@@ -10,7 +10,6 @@ import {
   Hydrator,
 } from '../../../../hydration/hydrator'
 import { Views } from '../../../../views'
-import { httpLogger } from '../../../../logger'
 
 export default function (server: Server, ctx: AppContext) {
   const skeleton = async (input: {

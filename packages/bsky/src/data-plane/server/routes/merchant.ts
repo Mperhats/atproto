@@ -5,6 +5,25 @@ import { getRecords } from './records'
 import { Database } from '../db'
 import { sql } from 'kysely'
 
+
+// Function to log the first four rows of the merchant table
+async function logFirstFourRowsOfMerchants(db:Database) {
+  const merchantRows = await db.db
+  .selectFrom('merchant') 
+  .select(sql`COUNT(*)`.as('rowCount'))
+  .executeTakeFirst();
+  console.log('First 4 rows of Merchant table:', merchantRows)
+}
+
+// Function to log the first four rows of the actor table
+async function logFirstFourRowsOfActors(db:Database) {
+  const count = await db.db
+  .selectFrom('actor') // Assuming the 'actor' table is present
+  .select(sql`COUNT(*)`.as('rowCount'))
+  .executeTakeFirst();
+  console.log('First 4 rows of Actor table:', count)
+}
+
 export default (db: Database): Partial<ServiceImpl<typeof Service>> => ({
   async getMerchants(req) {
     const { dids } = req
@@ -15,16 +34,19 @@ export default (db: Database): Partial<ServiceImpl<typeof Service>> => ({
       (did) => `at://${did}/app.bsky.merchant.merchantProfile/self`,
     )
 
+    await logFirstFourRowsOfMerchants(db)
+    await logFirstFourRowsOfActors(db)
+
     const { ref } = db.db.dynamic
     const [handlesRes, profiles] = await Promise.all([
       db.db
-        .selectFrom('actor')
+        .selectFrom('merchant')
         .where('did', 'in', dids)
-        .selectAll('actor')
+        .selectAll('merchant')
         .select([
           db.db
             .selectFrom('labeler')
-            .whereRef('creator', '=', ref('actor.did'))
+            .whereRef('creator', '=', ref('merchant.did'))
             .select(sql<true>`${true}`.as('val'))
             .as('isLabeler'),
         ])
@@ -33,8 +55,6 @@ export default (db: Database): Partial<ServiceImpl<typeof Service>> => ({
     ])
 
     console.log('handlesRes',handlesRes);
-    console.log('profiles',profiles);
-
 
     const byDid = keyBy(handlesRes, 'did')
     const merchants = dids.map((did, i) => {
@@ -42,14 +62,13 @@ export default (db: Database): Partial<ServiceImpl<typeof Service>> => ({
       return {
         exists: !!row,
         handle: row?.handle ?? undefined,
-        profile: profiles.records[i],
+        merchantProfile: profiles.records[i],
         takenDown: !!row?.takedownRef,
         takedownRef: row?.takedownRef || undefined,
         tombstonedAt: undefined, // in current implementation, tombstoned actors are deleted
         labeler: row?.isLabeler ?? false,
       }
     })
-    console.log('merchants retrieved? ',merchants)
     return { merchants }
   },
 

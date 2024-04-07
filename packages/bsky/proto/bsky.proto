@@ -351,6 +351,34 @@ message GetDidsByHandlesResponse {
   repeated string dids = 1;
 }
 
+
+//
+// Merchant Relationships
+//
+
+// - return relationships between merchants A and users B, C, D...
+//     - profile hydration
+//     - block application
+message GetMerchantRelationshipsRequest {
+  string merchant_did = 1;
+  repeated string target_dids = 2;
+}
+
+message MerchantRelationships {
+  bool muted = 1;
+  string muted_by_list = 2;
+  string blocked_by = 3;
+  string blocking = 4;
+  string blocked_by_list = 5;
+  string blocking_by_list = 6;
+  string following = 7;
+  string followed_by = 8;
+}
+
+message GetMerchantRelationshipsResponse {
+  repeated Relationships relationships = 1;
+}
+
 //
 // Relationships
 //
@@ -1012,6 +1040,9 @@ service Service {
   // Relationships
   rpc GetRelationships(GetRelationshipsRequest) returns (GetRelationshipsResponse);
   rpc GetBlockExistence(GetBlockExistenceRequest) returns (GetBlockExistenceResponse);
+
+  // Merchant Relationships
+  rpc GetMerchantRelationships(GetMerchantRelationshipsRequest) returns (GetMerchantRelationshipsResponse);
 
   // Lists
   rpc GetActorLists(GetActorListsRequest) returns (GetActorListsResponse);

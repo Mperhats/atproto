@@ -56,7 +56,7 @@ export default function (server: Server, ctx: AppContext) {
           }
         }
 
-        creds = await ctx.accountManager.createAccount({
+        creds = await ctx.accountManager.createMerchantAccount({
           did,
           handle,
           email,
@@ -192,8 +192,8 @@ const validateInputsForLocalPds = async (
 
   // check that the handle and email are available
   const [handleAccnt, emailAcct] = await Promise.all([
-    ctx.accountManager.getAccount(handle),
-    ctx.accountManager.getAccountByEmail(email),
+    ctx.accountManager.getMerchantAccount(handle),
+    ctx.accountManager.getMerchantAccountByEmail(email),
   ])
   if (handleAccnt) {
     throw new InvalidRequestError(`Handle already taken: ${handle}`)

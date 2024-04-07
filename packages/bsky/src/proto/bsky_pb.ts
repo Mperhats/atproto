@@ -2583,6 +2583,169 @@ export class GetDidsByHandlesResponse extends Message<GetDidsByHandlesResponse> 
 }
 
 /**
+ * - return relationships between merchants A and users B, C, D...
+ *     - profile hydration
+ *     - block application
+ *
+ * @generated from message bsky.GetMerchantRelationshipsRequest
+ */
+export class GetMerchantRelationshipsRequest extends Message<GetMerchantRelationshipsRequest> {
+  /**
+   * @generated from field: string merchant_did = 1;
+   */
+  merchantDid = "";
+
+  /**
+   * @generated from field: repeated string target_dids = 2;
+   */
+  targetDids: string[] = [];
+
+  constructor(data?: PartialMessage<GetMerchantRelationshipsRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "bsky.GetMerchantRelationshipsRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "merchant_did", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "target_dids", kind: "scalar", T: 9 /* ScalarType.STRING */, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetMerchantRelationshipsRequest {
+    return new GetMerchantRelationshipsRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetMerchantRelationshipsRequest {
+    return new GetMerchantRelationshipsRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetMerchantRelationshipsRequest {
+    return new GetMerchantRelationshipsRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetMerchantRelationshipsRequest | PlainMessage<GetMerchantRelationshipsRequest> | undefined, b: GetMerchantRelationshipsRequest | PlainMessage<GetMerchantRelationshipsRequest> | undefined): boolean {
+    return proto3.util.equals(GetMerchantRelationshipsRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message bsky.MerchantRelationships
+ */
+export class MerchantRelationships extends Message<MerchantRelationships> {
+  /**
+   * @generated from field: bool muted = 1;
+   */
+  muted = false;
+
+  /**
+   * @generated from field: string muted_by_list = 2;
+   */
+  mutedByList = "";
+
+  /**
+   * @generated from field: string blocked_by = 3;
+   */
+  blockedBy = "";
+
+  /**
+   * @generated from field: string blocking = 4;
+   */
+  blocking = "";
+
+  /**
+   * @generated from field: string blocked_by_list = 5;
+   */
+  blockedByList = "";
+
+  /**
+   * @generated from field: string blocking_by_list = 6;
+   */
+  blockingByList = "";
+
+  /**
+   * @generated from field: string following = 7;
+   */
+  following = "";
+
+  /**
+   * @generated from field: string followed_by = 8;
+   */
+  followedBy = "";
+
+  constructor(data?: PartialMessage<MerchantRelationships>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "bsky.MerchantRelationships";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "muted", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
+    { no: 2, name: "muted_by_list", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "blocked_by", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 4, name: "blocking", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 5, name: "blocked_by_list", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 6, name: "blocking_by_list", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 7, name: "following", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 8, name: "followed_by", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): MerchantRelationships {
+    return new MerchantRelationships().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): MerchantRelationships {
+    return new MerchantRelationships().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): MerchantRelationships {
+    return new MerchantRelationships().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: MerchantRelationships | PlainMessage<MerchantRelationships> | undefined, b: MerchantRelationships | PlainMessage<MerchantRelationships> | undefined): boolean {
+    return proto3.util.equals(MerchantRelationships, a, b);
+  }
+}
+
+/**
+ * @generated from message bsky.GetMerchantRelationshipsResponse
+ */
+export class GetMerchantRelationshipsResponse extends Message<GetMerchantRelationshipsResponse> {
+  /**
+   * @generated from field: repeated bsky.Relationships relationships = 1;
+   */
+  relationships: Relationships[] = [];
+
+  constructor(data?: PartialMessage<GetMerchantRelationshipsResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "bsky.GetMerchantRelationshipsResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "relationships", kind: "message", T: Relationships, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetMerchantRelationshipsResponse {
+    return new GetMerchantRelationshipsResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetMerchantRelationshipsResponse {
+    return new GetMerchantRelationshipsResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetMerchantRelationshipsResponse {
+    return new GetMerchantRelationshipsResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetMerchantRelationshipsResponse | PlainMessage<GetMerchantRelationshipsResponse> | undefined, b: GetMerchantRelationshipsResponse | PlainMessage<GetMerchantRelationshipsResponse> | undefined): boolean {
+    return proto3.util.equals(GetMerchantRelationshipsResponse, a, b);
+  }
+}
+
+/**
  * - return relationships between user A and users B, C, D...
  *     - profile hydration
  *     - block application

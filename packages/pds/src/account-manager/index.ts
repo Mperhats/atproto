@@ -34,7 +34,85 @@ export class AccountManager {
     this.db.close()
   }
 
-  // Account
+  // Merchant Account
+  async getMerchantAccount(
+    handleOrDid: string,
+    flags?: account.AvailabilityFlags,
+  ): Promise<account.MerchantAccount | null> {
+    return account.getMerchantAccount(this.db, handleOrDid, flags)
+  }
+
+  async getMerchantAccountByEmail(
+    email: string,
+    flags?: account.AvailabilityFlags,
+  ): Promise<ActorAccount | null> {
+    return account.getAccountByEmail(this.db, email, flags)
+  }
+
+  async getDidForMerchant(
+    handleOrDid: string,
+    flags?: account.AvailabilityFlags,
+  ): Promise<string | null> {
+    const got = await this.getMerchantAccount(handleOrDid, flags)
+    return got?.did ?? null
+  }
+
+  async createMerchantAccount(opts: {
+    did: string
+    handle: string
+    email?: string
+    password?: string
+    repoCid: CID
+    repoRev: string
+    inviteCode?: string
+    deactivated?: boolean
+  }) {
+    const {
+      did,
+      handle,
+      email,
+      password,
+      repoCid,
+      repoRev,
+      inviteCode,
+      deactivated,
+    } = opts
+    const passwordScrypt = password
+      ? await scrypt.genSaltAndHash(password)
+      : undefined
+
+    const { accessJwt, refreshJwt } = await auth.createTokens({
+      did,
+      jwtKey: this.jwtKey,
+      serviceDid: this.serviceDid,
+      scope: AuthScope.Access,
+    })
+    const refreshPayload = auth.decodeRefreshToken(refreshJwt)
+    const now = new Date().toISOString()
+    await this.db.transaction(async (dbTxn) => {
+      if (inviteCode) {
+        await invite.ensureInviteIsAvailable(dbTxn, inviteCode)
+      }
+      await Promise.all([
+        account.registerMerchant(dbTxn, { did, handle, deactivated }),
+        email && passwordScrypt
+          ? account.registerAccount(dbTxn, { did, email, passwordScrypt })
+          : Promise.resolve(),
+        invite.recordInviteUse(dbTxn, {
+          did,
+          inviteCode,
+          now,
+        }),
+        auth.storeRefreshToken(dbTxn, refreshPayload, null),
+        repo.updateRoot(dbTxn, did, repoCid, repoRev),
+      ])
+    })
+    return { accessJwt, refreshJwt }
+  }
+
+
+
+  // Actor Account
   // ----------
 
   async getAccount(
