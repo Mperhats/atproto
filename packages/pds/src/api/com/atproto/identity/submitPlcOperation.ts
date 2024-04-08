@@ -46,7 +46,7 @@ export default function (server: Server, ctx: AppContext) {
       }
 
       await ctx.plcClient.sendOperation(requester, op)
-      await ctx.sequencer.sequenceIdentityEvt({did:requester,actorCategory:'actor'})
+      await ctx.sequencer.sequenceIdentityEvt(requester)
       try {
         await ctx.idResolver.did.resolve(requester, true)
       } catch (err) {

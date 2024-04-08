@@ -95,6 +95,7 @@ export class RepoSubscription {
     envelope: Envelope,
   ) {
     const msg = envelope.message
+    console.log('event stream', msg)
     try {
       if (message.isCommit(msg)) {
         await this.handleCommit(msg)
@@ -195,7 +196,6 @@ export class RepoSubscription {
   }
 
   private async handleIdentityEvt(msg: message.Identity) {
-    console.log('Identity event', msg)
     await this.indexingSvc.indexHandle(msg.did, msg.time, true)
   }
 

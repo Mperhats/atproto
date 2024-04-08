@@ -77,7 +77,6 @@ export interface Identity {
   seq: number
   did: string
   time: string
-  actorCategory: 'actor' | 'merchant' | (string & {})
   [k: string]: unknown
 }
 

@@ -3506,7 +3506,7 @@ export const schemaDict = {
         type: 'object',
         description:
           "Represents a change to an account's identity. Could be an updated handle, signing key, or pds hosting endpoint. Serves as a prod to all downstream services to refresh their identity cache.",
-        required: ['seq', 'did', 'time', 'actorCategory'],
+        required: ['seq', 'did', 'time'],
         properties: {
           seq: {
             type: 'integer',
@@ -3518,10 +3518,6 @@ export const schemaDict = {
           time: {
             type: 'string',
             format: 'datetime',
-          },
-          actorCategory: {
-            type: 'string',
-            knownValues: ['actor', 'merchant'],
           },
         },
       },
