@@ -36,7 +36,7 @@ export default function (server: Server, ctx: AppContext) {
       })
 
       // @NOTE: we're over-emitting for now for backwards compatibility, can reduce this in the future
-      await ctx.sequencer.sequenceIdentityEvt(requester)
+      await ctx.sequencer.sequenceIdentityEvt({did:requester,actorCategory:'actor'})
       await ctx.sequencer.sequenceHandleUpdate(
         requester,
         account.handle ?? INVALID_HANDLE,

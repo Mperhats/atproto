@@ -10,6 +10,7 @@ import {
 import { PreparedWrite } from '../repo'
 import { CID } from 'multiformats/cid'
 import { RepoSeqInsert } from './db'
+import { ComAtprotoSyncSubscribeRepos } from '@atproto/api'
 
 export const formatSeqCommit = async (
   did: string,
@@ -83,9 +84,11 @@ export const formatSeqHandleUpdate = async (
 
 export const formatSeqIdentityEvt = async (
   did: string,
+  actorCategory: 'actor' | 'merchant'
 ): Promise<RepoSeqInsert> => {
   const evt: IdentityEvt = {
     did,
+    actorCategory
   }
   return {
     did,
@@ -142,6 +145,7 @@ export type HandleEvt = z.infer<typeof handleEvt>
 
 export const identityEvt = z.object({
   did: z.string(),
+  actorCategory: z.enum(['actor', 'merchant']),
 })
 export type IdentityEvt = z.infer<typeof identityEvt>
 

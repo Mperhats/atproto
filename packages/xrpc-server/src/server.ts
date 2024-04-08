@@ -337,7 +337,7 @@ export class Server {
   ) {
     const assertValidXrpcParams = (params: unknown) =>
       this.lex.assertValidXrpcParams(nsid, params)
-    
+
     this.subscriptions.set(
       nsid,
       new XrpcStreamServer({

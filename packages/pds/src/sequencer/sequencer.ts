@@ -218,8 +218,8 @@ export class Sequencer extends (EventEmitter as new () => SequencerEmitter) {
     await this.sequenceEvt(evt)
   }
 
-  async sequenceIdentityEvt(did: string) {
-    const evt = await formatSeqIdentityEvt(did)
+  async sequenceIdentityEvt(eventData: IdentityEvt) {
+    const evt = await formatSeqIdentityEvt(eventData.did,eventData.actorCategory)
     await this.sequenceEvt(evt)
   }
 

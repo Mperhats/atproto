@@ -59,7 +59,7 @@ export default function (server: Server, ctx: AppContext) {
           time: evt.time,
           ...evt.evt,
         }
-        console.log('evt yield in subscribeRepos:',event)
+        console.log('evt yield in subscribeRepos:', event)
         yield event
       } else if (evt.type === 'tombstone') {
         yield {
