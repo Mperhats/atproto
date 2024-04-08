@@ -126,8 +126,6 @@ export class RepoSubscription {
   }
 
   private async handleCommit(msg: message.Commit) {
-    console.log('Commit event', msg)
-
     const indexRecords = async () => {
       const { root, rootCid, ops } = await getOps(msg)
       if (msg.tooBig) {
@@ -193,7 +191,6 @@ export class RepoSubscription {
   }
 
   private async handleUpdateHandle(msg: message.Handle) {
-    console.log('Update handle event', msg)
     await this.indexingSvc.indexHandle(msg.did, msg.time, true)
   }
 
