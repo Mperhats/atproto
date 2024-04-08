@@ -95,7 +95,6 @@ export class RepoSubscription {
     envelope: Envelope,
   ) {
     const msg = envelope.message
-    console.log('event stream', msg)
     try {
       if (message.isCommit(msg)) {
         await this.handleCommit(msg)

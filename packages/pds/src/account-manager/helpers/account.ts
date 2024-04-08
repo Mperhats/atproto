@@ -49,24 +49,6 @@ const selectMerchantAccountQB = (db: AccountDb, flags?: AvailabilityFlags) => {
     ])
 }
 
-async function logFirstFourRowsOfMerchants(db: AccountDb) {
-  const merchantRows = await db.db
-    .selectFrom('merchant')
-    .selectAll()
-    .limit(4)
-    .execute()
-  console.log('First 4 rows of Merchant table:', merchantRows)
-}
-
-// Function to log the first four rows of the actor table
-async function logFirstFourRowsOfActors(db: AccountDb) {
-  const count = await db.db
-    .selectFrom('actor') // Assuming the 'actor' table is present
-    .select(sql`COUNT(*)`.as('rowCount'))
-    .executeTakeFirst()
-  console.log('First 4 rows of Actor table:', count)
-}
-
 export const registerMerchant = async (
   db: AccountDb,
   opts: {
@@ -105,11 +87,6 @@ export const registerMerchant = async (
       .onConflict((oc) => oc.doNothing())
       .returning('did'),
   )
-
-  logFirstFourRowsOfActors(db)
-  logFirstFourRowsOfMerchants(db)
-
-  console.log('registered new account into merchant db...', registered)
 
   if (!registered) {
     throw new UserAlreadyExistsError()

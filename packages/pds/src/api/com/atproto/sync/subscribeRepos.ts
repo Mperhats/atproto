@@ -53,14 +53,12 @@ export default function (server: Server, ctx: AppContext) {
           ...evt.evt,
         }
       } else if (evt.type === 'identity') {
-        const event = {
+        yield {
           $type: '#identity',
           seq: evt.seq,
           time: evt.time,
           ...evt.evt,
         }
-        console.log('evt yield in subscribeRepos:', event)
-        yield event
       } else if (evt.type === 'tombstone') {
         yield {
           $type: '#tombstone',
