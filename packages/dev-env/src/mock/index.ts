@@ -276,6 +276,7 @@ export async function generateMockSetup(env: TestNetwork) {
       }
     },
   })
+  
   const avatarImg = Buffer.from(blurHashB64, 'base64')
   const avatarRes = await alice.agent.api.com.atproto.repo.uploadBlob(
     avatarImg,
@@ -283,6 +284,7 @@ export async function generateMockSetup(env: TestNetwork) {
       encoding: 'image/png',
     },
   )
+  
   const fgAliceRes = await alice.agent.api.app.bsky.feed.generator.create(
     { repo: alice.did, rkey: fg1Uri.rkey },
     {
