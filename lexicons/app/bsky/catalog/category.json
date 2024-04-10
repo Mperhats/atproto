@@ -1,0 +1,55 @@
+{
+    "lexicon": 1,
+    "id": "app.bsky.merchant.catalog.category",
+    "defs": {
+        "main": {
+            "key": "tid",
+            "type": "record",
+            "description": "Represents a catalog category, detailing its ID, images, description, name, items within the category, and the order of items.",
+            "record": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string",
+                        "description": "Description of the catalog category."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the catalog category."
+                    },
+                    "items": {
+                        "type": "array",
+                        "description": "A list of identifiers for items within the category.",
+                        "items": { "type": "ref", "ref": "com.atproto.repo.strongRef" }
+                    },
+                    "catalogReference": {
+                        "type": "ref",
+                        "ref": "app.bsky.catalog.defs#catalogReference"
+                    },
+                    "itemOrdinals": {
+                        "type": "object",
+                        "description": "Defines the order of items within the category, represented as a map of item identifiers to their ordinal positions.",
+                        "required": ["itemReference","ordinal"],
+                        "itemLookup": {
+                            "properties": {
+                                "itemReference": { "type": "ref", "ref": "com.atproto.repo.strongRef" },
+                                "ordinal":{
+                                    "type": "integer",
+                                    "description": "the position in the list of items"
+                                }
+                            }
+                        }
+                    },
+                    "required": [
+                        "images",
+                        "description",
+                        "catalogReference",
+                        "name",
+                        "items",
+                        "itemOrdinals"
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,56 @@
+{
+    "lexicon": 1,
+    "id": "app.bsky.merchant.catalog.item",
+    "defs": {
+        "main": {
+            "key": "tid",
+            "type": "record",
+            "description": "Represents a catalog item, detailing its description, associated modifier groups, unique transaction ID (tid), images, inventory status, name, and price.",
+            "record": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string",
+                        "description": "Description of the catalog item."
+                    },
+                    "modifierGroups": {
+                        "type": "array",
+                        "description": "A list of identifiers referencing the modifier groups associated with this catalog item.",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "images": {
+                        "type": "ref",
+                        "ref": "app.bsky.embed.images"
+                    },
+                    "inventoryStatus": {
+                        "type": "ref",
+                        "ref": "app.bsky.catalog.defs#inventoryStatus"
+                    },
+                    "catalogReference": {
+                        "type": "ref",
+                        "ref": "app.bsky.catalog.defs#catalogReference"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the catalog item."
+                    },
+                    "price": {
+                        "type": "integer",
+                        "description": "Price of the catalog item in smallest currency unit (e.g., cents)."
+                    }
+                },
+                "required": [
+                    "description",
+                    "modifierGroups",
+                    "catalogReference",
+                    "images",
+                    "inventoryStatus",
+                    "name",
+                    "price"
+                ]
+            }
+        }
+    }
+}

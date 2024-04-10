@@ -263,6 +263,7 @@ export async function generateMockSetup(env: TestNetwork) {
 
   // a couple feed generators that returns some posts
   const fg1Uri = AtUri.make(alice.did, 'app.bsky.feed.generator', 'alice-favs')
+  console.log('fg1Uri', fg1Uri)
   const fg1 = await env.createFeedGen({
     [fg1Uri.toString()]: async () => {
       const feed = posts
@@ -276,7 +277,7 @@ export async function generateMockSetup(env: TestNetwork) {
       }
     },
   })
-  
+
   const avatarImg = Buffer.from(blurHashB64, 'base64')
   const avatarRes = await alice.agent.api.com.atproto.repo.uploadBlob(
     avatarImg,
@@ -284,7 +285,7 @@ export async function generateMockSetup(env: TestNetwork) {
       encoding: 'image/png',
     },
   )
-  
+
   const fgAliceRes = await alice.agent.api.app.bsky.feed.generator.create(
     { repo: alice.did, rkey: fg1Uri.rkey },
     {

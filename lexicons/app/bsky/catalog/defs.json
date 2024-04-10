@@ -1,0 +1,35 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.catalog.defs",
+  "defs": {
+    "inventoryStatus": {
+      "type": "string",
+      "description": "Inventory status of the catalog item.",
+      "knownValues": [
+        "for_sale",
+        "not_for_sale",
+        "low_quantity"
+      ]
+    },
+    "catalogReference": {
+      "type": "object",
+      "description": "References to the root catalog and parent modifier group.",
+      "required": [
+        "root",
+        "parent"
+      ],
+      "properties": {
+        "root": {
+          "type": "ref",
+          "ref": "com.atproto.repo.strongRef",
+          "description": "Reference to the root catalog that this item belongs to."
+        },
+        "parent": {
+          "type": "ref",
+          "ref": "com.atproto.repo.strongRef",
+          "description": "Reference to the parent modifier group of this item."
+        }
+      }
+    }
+  }
+}

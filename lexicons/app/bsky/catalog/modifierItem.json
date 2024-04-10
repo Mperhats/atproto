@@ -1,0 +1,39 @@
+{
+    "lexicon": 1,
+    "id": "app.bsky.merchant.catalog.modifierItem",
+    "defs": {
+        "main": {
+            "key": "tid",
+            "type": "record",
+            "description": "Represents a modifier item in a catalog, including its ID, name, price, inventory status, and references to both the root catalog and the parent modifier group using strong references.",
+            "record": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the modifier item."
+                    },
+                    "price": {
+                        "type": "integer",
+                        "description": "Price of the modifier item in smallest currency unit (e.g., cents)."
+                    },
+                    "inventoryStatus": {
+                        "type": "ref",
+                        "ref": "app.bsky.catalog.defs#inventoryStatus"
+                    },
+                    "catalogReference": {
+                        "type": "ref",
+                        "ref": "app.bsky.catalog.defs#catalogReference"
+                    }
+                },
+                "required": [
+                    "name",
+                    "price",
+                    "catalogReference",
+                    "inventoryStatus",
+                    "catalogReferences"
+                ]
+            }
+        }
+    }
+}

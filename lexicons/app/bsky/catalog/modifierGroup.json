@@ -1,0 +1,57 @@
+{
+    "lexicon": 1,
+    "id": "app.bsky.merchant.catalog.modifierGroup",
+    "defs": {
+      "main": {
+        "key": "tid",
+        "type": "record",
+        "description": "Represents a group of modifiers in a catalog, detailing its ID, the modifiers it contains, images, constraints on selections, and name.",
+        "record": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Unique identifier for the modifier group."
+            },
+            "modifiers": {
+              "type": "array",
+              "description": "A list of identifiers for the modifiers within the group.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "images": {
+              "type": "array",
+              "description": "List of image URLs for the modifier group.",
+              "items": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "maximumSelection": {
+              "type": "integer",
+              "description": "Maximum number of selections allowed from this modifier group."
+            },
+            "minimumSelection": {
+              "type": "integer",
+              "description": "Minimum number of selections required from this modifier group."
+            },
+            "maximumPerModifier": {
+              "type": "integer",
+              "description": "Maximum number of times a single modifier can be selected."
+            },
+            "name": {
+              "type": "string",
+              "description": "Name of the modifier group."
+            },
+            "catalogReference": {
+                "type": "ref",
+                "ref": "app.bsky.catalog.defs#catalogReference"
+            }
+          },
+          "required": ["modifiers", "images", "catalogReference", "maximumSelection", "minimumSelection", "maximumPerModifier", "name"]
+        }
+      }
+    }
+  }
+  
