@@ -1,0 +1,36 @@
+{
+    "lexicon": 1,
+    "id": "app.nosh.merchant.profile",
+    "description": "A merchant profile record",
+    "defs": {
+        "main": {
+            "type": "record",
+            "description": "A declaration of a merchant profile.",
+            "key": "literal:self",
+            "record": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "createdAt"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "description": "Name of the merchant."
+                    },
+                    "description": {
+                        "type": "string",
+                        "maxLength": 500,
+                        "description": "Free-form description of the merchant."
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "datetime",
+                        "description": "Timestamp when the merchant was created."
+                    }
+                }
+            }
+        }
+    }
+}

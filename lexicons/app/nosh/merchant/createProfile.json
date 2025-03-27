@@ -1,0 +1,58 @@
+{
+    "lexicon": 1,
+    "id": "app.nosh.merchant.createProfile",
+    "description": "Create a new merchant profile",
+    "defs": {
+        "main": {
+            "type": "procedure",
+            "description": "Create a new merchant profile.",
+            "input": {
+                "encoding": "application/json",
+                "schema": {
+                    "type": "object",
+                    "required": [
+                        "name"
+                    ],
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "maxLength": 100,
+                            "description": "Name of the merchant."
+                        },
+                        "description": {
+                            "type": "string",
+                            "maxLength": 500,
+                            "description": "Description of the merchant."
+                        }
+                    }
+                }
+            },
+            "output": {
+                "encoding": "application/json",
+                "schema": {
+                    "type": "object",
+                    "required": [
+                        "did",
+                        "uri"
+                    ],
+                    "properties": {
+                        "did": {
+                            "type": "string",
+                            "format": "did",
+                            "description": "The DID of the created merchant."
+                        },
+                        "uri": {
+                            "type": "string",
+                            "format": "at-uri",
+                            "description": "The AT-URI of the created merchant record."
+                        },
+                        "view": {
+                            "type": "ref",
+                            "ref": "app.nosh.merchant.defs#merchantView"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

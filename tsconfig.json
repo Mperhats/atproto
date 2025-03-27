@@ -1,22 +1,56 @@
 {
   "include": [],
   "references": [
-    { "path": "./packages/api" },
-    { "path": "./packages/aws" },
-    { "path": "./packages/bsky" },
-    { "path": "./packages/bsync" },
-    { "path": "./packages/common" },
-    { "path": "./packages/common-web" },
-    { "path": "./packages/crypto" },
-    { "path": "./packages/dev-env" },
-    { "path": "./packages/identity" },
-    { "path": "./packages/lex-cli" },
-    { "path": "./packages/lexicon" },
-    { "path": "./packages/ozone" },
-    { "path": "./packages/pds" },
-    { "path": "./packages/repo" },
-    { "path": "./packages/syntax" },
-    { "path": "./packages/xrpc" },
-    { "path": "./packages/xrpc-server" }
+    {
+      "path": "./packages/api"
+    },
+    {
+      "path": "./packages/aws"
+    },
+    {
+      "path": "./packages/bsky"
+    },
+    {
+      "path": "./packages/bsync"
+    },
+    {
+      "path": "./packages/common"
+    },
+    {
+      "path": "./packages/common-web"
+    },
+    {
+      "path": "./packages/crypto"
+    },
+    {
+      "path": "./packages/dev-env"
+    },
+    {
+      "path": "./packages/identity"
+    },
+    {
+      "path": "./packages/lex-cli"
+    },
+    {
+      "path": "./packages/lexicon"
+    },
+    {
+      "path": "./packages/ozone"
+    },
+    {
+      "path": "./packages/pds"
+    },
+    {
+      "path": "./packages/repo"
+    },
+    {
+      "path": "./packages/syntax"
+    },
+    {
+      "path": "./packages/xrpc"
+    },
+    {
+      "path": "./packages/xrpc-server"
+    }
   ]
 }
