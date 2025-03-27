@@ -1,0 +1,70 @@
+{
+    "lexicon": 1,
+    "id": "app.nosh.merchant.defs",
+    "description": "Shared definitions for the merchant namespace",
+    "defs": {
+        "merchantView": {
+            "type": "object",
+            "required": [
+                "did",
+                "name",
+                "createdAt"
+            ],
+            "properties": {
+                "did": {
+                    "type": "string",
+                    "format": "did"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 500
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "indexedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                }
+            }
+        },
+        "merchantViewDetailed": {
+            "type": "object",
+            "required": [
+                "did",
+                "name",
+                "createdAt"
+            ],
+            "properties": {
+                "did": {
+                    "type": "string",
+                    "format": "did"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 500
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "indexedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "productsCount": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}
