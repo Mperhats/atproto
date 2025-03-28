@@ -1,5 +1,7 @@
 packages:
   - "services/*"
   - "packages/*"
+  - "packages/oauth/*"
+  - "packages/internal/*"
   - "apps/*"
   - "apps/statusphere-react/packages/*"

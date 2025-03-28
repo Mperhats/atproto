@@ -2,10 +2,10 @@ Looking at the codebase, the JWT validation happens in the authorization middlew
 
 I need to:
 - run a local PDS and disable the build step for a faster dev loop.
-- run the PDS directly in the monorepo with `workspace:^` dep in the statusphere app instead of resolving the users DID from the 
-- the PDS requires a DID in order to find the host uri for the authenticated users PDS.
+- run the PDS directly in the monorepo with `workspace:^` dep in the statusphere app instead of resolving the users DID from the
+- the PDS requires a DID in order to find the host url for the authenticated users PDS.
     - need to understand DID resolution - where is the DID doc with the users PDS uri retrieved? How can I point this to local host?
-    - we need a solution to the users DID doc hosting their PDS URL
+    - we need a solution to the users DID doc hosting their PDS URL.
 
 ## DID Resolution in the OAuth Flow
 
@@ -34,7 +34,6 @@ DID resolution is a critical part of the authentication flow that connects user 
    ```
 
 ### Key Files in DID Resolution
-
 - `packages/identity/src/id-resolver.ts` - Main resolver implementation
 - `packages/identity/src/did/did-resolver.ts` - DID document resolution logic
 - `packages/identity/src/handle/index.ts` - Handle resolution
@@ -85,8 +84,8 @@ class LocalDevResolver extends IdResolver {
 }
 
 // In your app context creation
-const resolver = env.isDevelopment 
-  ? new LocalDevResolver() 
+const resolver = env.isDevelopment
+  ? new LocalDevResolver()
   : createIdResolver()
 ```
 
@@ -174,7 +173,7 @@ export default function (server: Server, ctx: AppContext) {
 server.com.atproto.repo.putRecord({
   handler: async ({ auth, input }) => {
     const { repo, collection, rkey, record } = input.body
-    
+
     // Verify user has permission to write to this repo
     if (did !== auth.credentials.did) {
       throw new AuthRequiredError()
@@ -206,7 +205,7 @@ export class AuthVerifier {
 
 ## Key Files in the Authentication Chain:
 
-IMPORTANT! TO RUN A PDS LOCALLY SEE `packages/dev-env/README.md` 
+IMPORTANT! TO RUN A PDS LOCALLY SEE `packages/dev-env/README.md`
 
 1. **OAuth Configuration**:
    - `packages/appview/src/auth/client.ts` - OAuth client setup
