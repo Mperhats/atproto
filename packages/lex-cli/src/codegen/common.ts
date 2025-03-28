@@ -278,7 +278,7 @@ export async function gen(
   const src = project.getFileSystem().readFileSync(path)
   return {
     path: path,
-    content: `${banner()}${await prettier.format(src, PRETTIER_OPTS)}`,
+    content: `${banner()}${await format(src, PRETTIER_OPTS)}`,
   }
 }
 

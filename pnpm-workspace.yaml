@@ -5,3 +5,6 @@ packages:
   - "packages/internal/*"
   - "apps/*"
   - "apps/statusphere-react/packages/*"
+  - "apps/statusphere-react/packages/lexicon/"
+  - "apps/statusphere-react/packages/client/"
+  - "apps/statusphere-react/packages/appview/"
