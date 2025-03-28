@@ -15,7 +15,7 @@ export class TestPds {
     public url: string,
     public port: number,
     public server: pds.PDS,
-  ) {}
+  ) { }
 
   static async create(config: PdsConfig): Promise<TestPds> {
     const plcRotationKey = await Secp256k1Keypair.create({ exportable: true })

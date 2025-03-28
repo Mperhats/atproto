@@ -1,4 +1,5 @@
 packages:
-  - 'services/*'
-  - 'packages/*'
-  - 'apps/*'
+  - "services/*"
+  - "packages/*"
+  - "apps/*"
+  - "apps/statusphere-react/packages/*"

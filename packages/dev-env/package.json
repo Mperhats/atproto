@@ -17,7 +17,8 @@
   "bin": "dist/bin.js",
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
-    "start": "../dev-infra/with-test-redis-and-db.sh node dist/bin.js"
+    "start": "../dev-infra/with-test-redis-and-db.sh node dist/bin.js",
+    "pds": "node -r esbuild-register src/run-pds.ts"
   },
   "dependencies": {
     "@atproto/api": "workspace:^",
@@ -39,5 +40,9 @@
     "get-port": "^5.1.1",
     "multiformats": "^9.9.0",
     "uint8arrays": "3.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.14.48",
+    "esbuild-register": "^3.6.0"
   }
 }
